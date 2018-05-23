@@ -1,0 +1,9 @@
+include AUTHORS
+include CHANGELOG.md
+include README.md
+include LICENSE*
+# include *requirements.txt
+
+# recursive-include docs *
+# prune docs/_build
+recursive-include tests *py
