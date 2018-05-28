@@ -1,0 +1,23 @@
+language: python
+
+python:
+  - 2.7
+  - 3.4
+  - 3.5
+  - 3.6
+
+before_install:
+  - pip install --upgrade pip setuptools
+  - pip install -r requirements-dev.txt
+  # only Tested with this streamlink dev version
+  - pip install -U git+https://github.com/back-to/streamlink.git@logging-refactor
+
+install:
+  - pip install -e .
+
+script:
+  - pytest --cov
+  - flake8 liveproxy/ --show-source --statistic --exit-zero
+
+after_success:
+  - codecov
