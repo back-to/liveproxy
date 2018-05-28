@@ -12,9 +12,14 @@ from textwrap import dedent
 
 from streamlink import logger
 from .constants import (
-    LIVESTREAMER_VERSION, STREAM_PASSTHROUGH, DEFAULT_PLAYER_ARGUMENTS
+    STREAMLINK_VERSION, STREAM_PASSTHROUGH, DEFAULT_PLAYER_ARGUMENTS
 )
-from .utils import find_default_player
+try:
+    from .utils import find_default_player
+except ImportError:
+    # ignore for Kodi
+    def find_default_player():
+        pass
 
 _filesize_re = re.compile(r"""
     (?P<size>\d+(\.\d+)?)
@@ -183,37 +188,23 @@ def build_parser():
         """)
     )
 
+    # LiveProxy can't handle 'Positional arguments' correctly
     positional = parser.add_argument_group("Positional arguments")
     positional.add_argument(
-        "url",
+        "--dont-error-url",
+        dest="url",
         metavar="URL",
-        nargs="?",
-        help="""
-        A URL to attempt to extract streams from.
-
-        Usually, the protocol of http(s) URLs can be omitted ("https://"),
-        depending on the implementation of the plugin being used.
-
-        Alternatively, the URL can also be specified by using the --url option.
-        """
+        required=False,
+        help=argparse.SUPPRESS
     )
+    # custom command --q for quality, so it can be used in the url
     positional.add_argument(
-        "stream",
+        "--q",
+        dest="stream",
         metavar="STREAM",
-        nargs="?",
         type=comma_list,
-        help="""
-        Stream to play.
-
-        Use "best" or "worst" for selecting the highest or lowest available quality.
-
-        Fallback streams can be specified by using a comma-separated list:
-
-          "720p,480p,best"
-
-        If no stream is specified and --default-stream is not used, then a
-        list of available streams will be printed.
-        """
+        required=False,
+        help=argparse.SUPPRESS
     )
 
     general = parser.add_argument_group("General options")
@@ -227,7 +218,7 @@ def build_parser():
     general.add_argument(
         "-V", "--version",
         action="version",
-        version="%(prog)s {0}".format(LIVESTREAMER_VERSION),
+        version="%(prog)s {0}".format(STREAMLINK_VERSION),
         help="""
         Show version number and exit.
         """
