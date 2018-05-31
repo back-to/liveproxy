@@ -1,9 +1,9 @@
 """
-    This is a mirror file of
+    This is a mirror file with custom changes of
+
     - src/streamlink_cli/argparser.py
 
-    https://github.com/streamlink/streamlink/tree/1d1f262d7daaeb381ddd023c6060db1103ce65ad
-    with https://github.com/streamlink/streamlink/pull/1690 merged
+    6e002d42c8f74f430ed587569e655233c04b4154
 """
 import argparse
 import re
@@ -808,8 +808,6 @@ def build_parser():
         help="""
         Limit the playback duration, useful for watching segments of a stream. The actual duration may be slightly
         longer, as it is rounded to the nearest HLS segment.
-
-        Has no effect on live streams.
 
         Default is unlimited.
         """)
