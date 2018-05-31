@@ -24,7 +24,11 @@ try:
     # Kodi - service.liveproxy
     import xbmc
     CONFIG_FILES.extend([xbmc.translatePath('special://profile/addon_data/service.liveproxy/config').encode('utf-8')])
-    PLUGINS_DIR.extend([xbmc.translatePath('special://profile/addon_data/service.liveproxy/plugins/').encode('utf-8')])
+    PLUGINS_DIR.extend([
+        xbmc.translatePath('special://profile/addon_data/service.liveproxy/plugins/').encode('utf-8'),
+        xbmc.translatePath('special://home/addons/script.module.back-to-plugins/lib/data/').encode('utf-8'),
+        xbmc.translatePath('special://home/addons/script.module.streamlink-plugins/lib/data/').encode('utf-8'),
+    ])
 except ImportError:
     pass
 
