@@ -1,5 +1,31 @@
 # -*- coding: utf-8 -*-
+import errno
 import logging
+import os
+import socket
+
+from collections import OrderedDict
+from contextlib import contextmanager
+from gettext import gettext
+from time import time
+
+from streamlink import (
+    Streamlink,
+    StreamError,
+    PluginError,
+    NoPluginError,
+)
+from streamlink.compat import (
+    parse_qsl,
+    unquote,
+    urlparse,
+)
+from streamlink.plugin import PluginOptions
+from streamlink.stream import HDSStream, HTTPStream
+from streamlink.stream.ffmpegmux import MuxedStream
+
+from .compat import BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn
+from .constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
 from .mirror_argparser import build_parser
 
 log = logging.getLogger('streamlink.liveproxy-server')
@@ -12,6 +38,50 @@ def ignored(*exceptions):
         yield
     except exceptions:
         pass
+
+
+def resolve_stream_name(streams, stream_name):
+    '''Returns the real stream name of a synonym.'''
+
+    if stream_name in STREAM_SYNONYMS and stream_name in streams:
+        for name, stream in streams.items():
+            if stream is streams[stream_name] and name not in STREAM_SYNONYMS:
+                return name
+
+    return stream_name
+
+
+def format_valid_streams(plugin, streams):
+    '''Formats a dict of streams.
+
+    Filters out synonyms and displays them next to
+    the stream they point to.
+
+    Streams are sorted according to their quality
+    (based on plugin.stream_weight).
+
+    '''
+
+    delimiter = ', '
+    validstreams = []
+
+    for name, stream in sorted(streams.items(),
+                               key=lambda stream: plugin.stream_weight(stream[0])):
+        if name in STREAM_SYNONYMS:
+            continue
+
+        def synonymfilter(n):
+            return stream is streams[n] and n is not name
+
+        synonyms = list(filter(synonymfilter, streams.keys()))
+
+        if len(synonyms) > 0:
+            joined = delimiter.join(synonyms)
+            name = '{0} ({1})'.format(name, joined)
+
+        validstreams.append(name)
+
+    return delimiter.join(validstreams)
 
 
 def setup_args(parser, arglist=[], config_files=[], ignore_unknown=True):
@@ -35,6 +105,19 @@ def setup_args(parser, arglist=[], config_files=[], ignore_unknown=True):
     return args
 
 
+def load_plugins(session, dirs):
+    '''Attempts to load plugins from a list of directories.'''
+
+    dirs = [os.path.expanduser(d) for d in dirs]
+
+    for directory in dirs:
+        if os.path.isdir(directory):
+            session.load_plugins(directory)
+        else:
+            log.warning('Plugin path {0} does not exist or is not '
+                        'a directory!', directory)
+
+
 def setup_config_args(session, args, parser, arglist):
     config_files = []
 
@@ -55,6 +138,14 @@ def setup_config_args(session, args, parser, arglist):
     if config_files:
         args = setup_args(parser, arglist, config_files, ignore_unknown=True)
     return args
+
+
+def setup_plugins(session, args):
+    '''Loads any additional plugins.'''
+    if args.plugin_dirs:
+        PLUGINS_DIR.extend(args.plugin_dirs)
+
+    load_plugins(session, PLUGINS_DIR)
 
 
 def setup_http_session(session, args):
