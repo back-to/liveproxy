@@ -24,6 +24,28 @@ def check_root():
             log.info('LiveProxy is running as root! Be careful!')
 
 
+def check_streamlink_version():
+    wrong_version = False
+    _v = streamlink_version.split('+')
+    if _v[0] < '0.12.1':
+        wrong_version = True
+    elif _v[0] == '0.12.1':
+        try:
+            if (_v[1].split('.')[0] >= '73'):
+                wrong_version = False
+            else:
+                wrong_version = True
+        except IndexError:
+            wrong_version = True
+    else:
+        wrong_version = False
+
+    if wrong_version is True:
+        log.error('Streamlink version 0.12.1+73 is required, your version is {0}'.format(streamlink_version))
+        log.info('pip install -U git+https://github.com/streamlink/streamlink.git')
+        sys.exit(1)
+
+
 def log_current_versions():
     '''Show current installed versions'''
 
@@ -52,6 +74,7 @@ def setup_logging(stream=sys.stdout, level='debug'):
 
 __all__ = [
     'check_root',
+    'check_streamlink_version',
     'log_current_versions',
     'setup_logging',
 ]
