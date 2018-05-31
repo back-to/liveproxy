@@ -323,10 +323,178 @@ def setup_plugin_options(session, args, plugin):
                 log.error('Missing required {0} for {1}'.format(req.name, pname))
 
 
+def main_play(HTTPBase, redirect=False):
+    # parse url query data
+    old_data = parse_qsl(urlparse(HTTPBase.path).query)
+    arglist = []
+    for k, v in old_data:
+        arglist += ['--{0}'.format(unquote(k)), unquote(v)]
+
+    parser = build_parser()
+    args = setup_args(parser, arglist, ignore_unknown=True)
+
+    # create a new session for every request
+    session = Streamlink()
+
+    log.info('User-Agent: {0}'.format(HTTPBase.headers.get('User-Agent', '???')))
+    log.info('Client: {0}'.format(HTTPBase.client_address))
+    log.info('Address: {0}'.format(HTTPBase.address_string()))
+
+    setup_plugins(session, args)
+    setup_plugin_args(session, parser)
+    # call setup args again once the plugin specific args have been added
+    args = setup_args(parser, arglist, ignore_unknown=True)
+    args = setup_config_args(session, args, parser, arglist)
+    setup_http_session(session, args)
+
+    if args.url:
+        setup_options(session, args)
+
+        try:
+            plugin = session.resolve_url(args.url)
+            setup_plugin_options(session, args, plugin)
+            log.info('Found matching plugin {0} for URL {1}',
+                     plugin.module, args.url)
+
+            plugin_args = []
+            for parg in plugin.arguments:
+                value = plugin.get_option(parg.dest)
+                if value:
+                    plugin_args.append((parg, value))
+
+            if plugin_args:
+                log.debug('Plugin specific arguments:')
+                for parg, value in plugin_args:
+                    log.debug(' {0}={1} ({2})'.format(parg.argument_name(plugin.module),
+                                                      value if not parg.sensitive else ('*' * 8),
+                                                      parg.dest))
+
+            if redirect is True:
+                streams = session.streams(
+                    args.url,
+                    stream_types=['hls', 'http'])
+            else:
+                streams = session.streams(
+                    args.url,
+                    stream_types=args.stream_types,
+                    sorting_excludes=args.stream_sorting_excludes)
+        except NoPluginError:
+            log.error('No plugin can handle URL: {0}', args.url)
+            HTTPBase._headers(404, 'text/html')
+            return
+        except PluginError as err:
+            log.error('PluginError {0}', str(err))
+            HTTPBase._headers(404, 'text/html')
+            return
+
+        if not streams:
+            log.error('No playable streams found on this URL: {0}', args.url)
+            HTTPBase._headers(404, 'text/html')
+            return
+
+        if args.default_stream and not args.stream:
+            args.stream = args.default_stream
+
+        if not args.stream:
+            args.stream = ['best']
+
+        stream_ended = False
+        validstreams = format_valid_streams(plugin, streams)
+        for stream_name in args.stream:
+            if stream_name in streams:
+                log.info('Available streams: {0}', validstreams)
+
+                '''Decides what to do with the selected stream.'''
+
+                stream_name = resolve_stream_name(streams, stream_name)
+                stream = streams[stream_name]
+
+                # Find any streams with a '_alt' suffix and attempt
+                # to use these in case the main stream is not usable.
+                alt_streams = list(filter(lambda k: stream_name + '_alt' in k,
+                                          sorted(streams.keys())))
+
+                for stream_name in [stream_name] + alt_streams:
+                    stream = streams[stream_name]
+                    stream_type = type(stream).shortname()
+
+                    log.info('Opening stream: {0} ({1})', stream_name,
+                             stream_type)
+
+                    if not isinstance(stream, (HDSStream, HTTPStream, MuxedStream)):
+                        # allow only http based streams: HDS HLS HTTP
+                        # RTMP is not supported
+                        log.warning('only HTTP, HLS, HDS or MuxedStreams are supported.')
+                        log.debug(str(type(stream)))
+                        continue
+
+                    # 301
+                    if redirect is True:
+                        log.info('301 - URL: {0}'.format(stream.url))
+                        HTTPBase.send_response(301)
+                        HTTPBase.send_header('Location', stream.url)
+                        HTTPBase.end_headers()
+                        log.info('301 - done')
+                        stream_ended = True
+                        break
+
+                    # play
+                    try:
+                        fd = stream.open()
+                    except StreamError as err:
+                        log.error('Could not open stream: {0}'.format(err))
+                        continue
+
+                    cache = 4096
+                    HTTPBase._headers(200, 'video/unknown')
+                    try:
+                        log.debug('Pre-buffering {0} bytes'.format(cache))
+                        while True:
+                            buff = fd.read(cache)
+                            if not buff:
+                                log.error('No Data for buff!')
+                                break
+                            HTTPBase.wfile.write(buff)
+                        HTTPBase.wfile.close()
+                    except socket.error as e:
+                        if isinstance(e.args, tuple):
+                            if e.errno == errno.EPIPE:
+                                # remote peer disconnected
+                                log.info('Detected remote disconnect')
+                            else:
+                                log.error(str(e))
+                        else:
+                            log.error(str(e))
+
+                    fd.close()
+                    log.info('Stream ended')
+                    fd = None
+                    stream_ended = True
+
+                    break
+
+                if not stream_ended:
+                    HTTPBase._headers(404, 'text/html')
+                return
+
+            err = ('The specified stream(s) \'{0}\' could not be '
+                   'found'.format(', '.join(args.stream)))
+
+            log.error('{0}.\n       Available streams: {1}',
+                      err, validstreams)
+            HTTPBase._headers(404, 'text/html')
+            return
+
+        else:
+            HTTPBase._headers(404, 'text/html')
+            log.error('No URL provided.')
+            return
+
+
 class HTTPRequest(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
-        log.debug('%s - %s\n' % (self.address_string(), format % args))
+        log.debug('%s - %s' % (self.address_string(), format % args))
 
     def _headers(self, status, content):
         self.send_response(status)
