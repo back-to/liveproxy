@@ -7,13 +7,15 @@
 """
 import argparse
 import re
+
 from string import printable
 from textwrap import dedent
 
-from streamlink import logger
 from .constants import (
     STREAMLINK_VERSION, STREAM_PASSTHROUGH, DEFAULT_PLAYER_ARGUMENTS
 )
+from .shared import logger
+
 try:
     from .utils import find_default_player
 except ImportError:

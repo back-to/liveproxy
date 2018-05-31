@@ -10,6 +10,7 @@ from .mirror_argparser import (
     HelpFormatter,
     num,
 )
+from .shared import logger
 
 _ip_address_re = re.compile(r'^((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])$')
 
@@ -51,6 +52,17 @@ general.add_argument(
     help='''
     Show version number and exit.
     '''
+)
+general.add_argument(
+    '-l', '--loglevel',
+    metavar='LEVEL',
+    choices=logger.levels,
+    default='info',
+    help='''
+    Set the log message threshold.
+
+    Default is info
+'''
 )
 
 server = parser.add_argument_group('Server options')

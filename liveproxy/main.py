@@ -55,7 +55,7 @@ def main():
             if httpd:
                 httpd.shutdown()
                 httpd.server_close()
-            log.info('Interrupted! Exiting...')
+            log.error('Interrupted! Exiting...')
             error_code = 130
         finally:
             if httpd:

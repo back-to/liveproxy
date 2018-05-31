@@ -68,7 +68,7 @@ def log_current_versions():
         requests_version, websocket_version))
 
 
-def setup_logging(stream=sys.stdout, level='debug'):
+def setup_logging(stream=sys.stdout, level='info'):
     logger.basicConfig(stream=stream, level=level, format='[{name}][{levelname}] {message}', style='{')
 
 
@@ -76,5 +76,6 @@ __all__ = [
     'check_root',
     'check_streamlink_version',
     'log_current_versions',
+    'logger',
     'setup_logging',
 ]
