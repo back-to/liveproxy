@@ -72,7 +72,7 @@ server.add_argument(
     type=ip_address,
     default='127.0.0.1',
     help='''
-    A fixed ip to use as a host.
+    A fixed IP to use as a HOST.
 
     Default is 127.0.0.1.
     '''
@@ -81,11 +81,11 @@ server.add_argument(
     '--port',
     metavar='PORT',
     type=num(int, min=0, max=65535),
-    default=53473,
+    default=53422,
     help='''
-    A fixed port to use for the host.
+    A fixed PORT to use for the HOST.
 
-    Default is 53473.
+    Default is 53422.
     '''
 )
 
