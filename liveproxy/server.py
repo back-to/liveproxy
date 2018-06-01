@@ -27,6 +27,7 @@ from streamlink.stream.ffmpegmux import MuxedStream
 from .compat import BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn
 from .constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
 from .mirror_argparser import build_parser
+from .shared import logger
 
 log = logging.getLogger('streamlink.liveproxy-server')
 
@@ -345,6 +346,7 @@ def main_play(HTTPBase, redirect=False):
     # call setup args again once the plugin specific args have been added
     args = setup_args(parser, arglist, ignore_unknown=True)
     args = setup_config_args(session, args, parser, arglist)
+    logger.root.setLevel(args.loglevel)
     setup_http_session(session, args)
 
     if args.url:
