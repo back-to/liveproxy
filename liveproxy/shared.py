@@ -21,13 +21,14 @@ def check_root():
 
 
 def check_streamlink_version():
+    streamlink_commit = 100
     wrong_version = False
     _v = streamlink_version.split('+')
     if _v[0] < '0.12.1':
         wrong_version = True
     elif _v[0] == '0.12.1':
         try:
-            if (_v[1].split('.')[0] >= '73'):
+            if (int(_v[1].split('.')[0]) >= streamlink_commit):
                 wrong_version = False
             else:
                 wrong_version = True
@@ -37,7 +38,8 @@ def check_streamlink_version():
         wrong_version = False
 
     if wrong_version is True:
-        log.error('Streamlink version 0.12.1+73 is required, your version is {0}'.format(streamlink_version))
+        log.error('Streamlink version 0.12.1+{0} is required, your version is {1}'.format(
+            streamlink_commit, streamlink_version))
         log.info('pip install -U git+https://github.com/streamlink/streamlink.git')
         sys.exit(1)
 
