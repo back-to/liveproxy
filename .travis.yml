@@ -17,7 +17,7 @@ install:
 
 script:
   - pytest --cov
-  - flake8 liveproxy/ --show-source --statistic --exit-zero
+  - flake8 liveproxy/
 
 after_success:
   - codecov
