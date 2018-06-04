@@ -2,4 +2,3 @@ pip>=9.0.1
 flake8
 pytest
 pytest-cov
-codecov
