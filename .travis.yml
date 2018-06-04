@@ -1,16 +1,25 @@
 language: python
 
-python:
-  - 2.7
-  - 3.4
-  - 3.5
-  - 3.6
+matrix:
+  include:
+  - python: '2.7'
+  - python: '3.4'
+  - python: '3.5'
+  - python: '3.6'
+    env: BUILD_DOCS=yes
+  - python: '3.7-dev'
+  allow_failures:
+  - python: '3.7-dev'
 
 before_install:
   - pip install --upgrade pip setuptools
   - pip install -r requirements-dev.txt
   # only Tested with this streamlink dev version
   - pip install -U git+https://github.com/back-to/streamlink.git@liveproxy
+  - if [[ $BUILD_DOCS == 'yes' ]]; then
+      pip install -r requirements-docs.txt;
+      pip install doctr;
+    fi
 
 install:
   - pip install -e .
@@ -19,3 +28,15 @@ script:
   - liveproxy --version
   - pytest --cov
   - flake8 liveproxy/
+  - if [[ $BUILD_DOCS == 'yes' ]]; then make --directory=docs html; fi
+
+after_success:
+  - set -e
+  # push docs for master
+  - if [[ $BUILD_DOCS == 'yes' && $TRAVIS_REPO_SLUG == 'back-to/liveproxy' ]]; then doctr deploy .; fi
+
+doctr:
+  build-tags: True
+  deploy-repo: liveproxy/liveproxy.github.io
+  key-path: deploy_key_doctr.enc
+  require-master: True
