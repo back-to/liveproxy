@@ -1,0 +1,249 @@
+.. _install:
+
+.. |PATH| raw:: html
+
+    https://raw.githubusercontent.com/back-to/ipk/master/build/
+
+.. |br| raw:: html
+
+  <br />
+
+Installation
+============
+
+Source code
+-----------
+
+There are a few different methods to do this,
+`pip <https://pip.readthedocs.io/en/latest/installing/>`_ the Python package
+manager, or by checking out the latest code with
+`Git <https://git-scm.com/downloads>`_.
+
+The commands listed here will also upgrade any existing version of LiveProxy.
+
+.. rst-class:: table-custom-layout
+
+==================================== ===========================================
+Version                              Installing
+==================================== ===========================================
+`Latest release (pip)`_              .. code-block:: console
+
+                                        # pip install -U streamlink
+`Development version (pip)`_         .. code-block:: console
+
+                                        # pip install -U git+https://github.com/back-to/liveproxy.git
+
+`Development version (git)`_         .. code-block:: console
+
+                                        $ git clone git://github.com/back-to/liveproxy.git
+                                        $ cd liveproxy
+                                        # python setup.py install
+==================================== ===========================================
+
+.. _Latest release (pip): https://pypi.org/project/liveproxy/
+.. _Development version (pip): https://github.com/back-to/liveproxy
+.. _Development version (git): https://github.com/back-to/liveproxy
+
+Dependencies
+^^^^^^^^^^^^
+
+To install LiveProxy from source you will need these dependencies.
+
+.. rst-class:: table-custom-layout
+
+==================================== ===========================================
+Name                                 Notes
+==================================== ===========================================
+`Python`_                            At least version **2.7** or **3.4**.
+`python-setuptools`_
+
+**Automatically installed by the setup script**
+--------------------------------------------------------------------------------
+`python-streamlink`_                 At least version **0.12.1**.
+==================================== ===========================================
+
+.. _Python: https://www.python.org/
+.. _python-setuptools: https://pypi.org/project/setuptools/
+.. _python-streamlink: https://pypi.org/project/streamlink/
+
+Installing without root permissions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+If you do not wish to install Streamlink globally on your system it's
+recommended to use `venv`_ to create a user owned Python environment instead.
+
+.. code-block:: console
+
+    Creating an environment
+    $ python3 -m venv ~/myenv
+
+    Activating the environment
+    $ source ~/myenv/bin/activate
+
+    Installing streamlink into the environment
+    (myenv)$ pip install liveproxy
+
+    Using streamlink in the environment
+    (myenv)$ liveproxy ...
+
+    Deactivating the environment
+    (myenv)$ deactivate
+
+    Using streamlink without activating the environment
+    $ ~/myenv/bin/liveproxy ...
+
+.. _venv: https://docs.python.org/3/library/venv.html
+
+Kodi
+----
+
+  LiveProxy can be used as a **service proxy** for Kodi **IPTV Simple PVR**
+
+  Download `repository.back-to`_
+
+  Install *service.liveproxy*
+
+  .. Note:: A Kodi restart is recommended.
+
+  .. Attention::
+
+      **script.module.pycryptodome** is required for LiveProxy, |br|
+      but it's only prepacked on **Kodi Leia**.
+
+      If you want to use this Addon on **Krypton**, |br|
+      you will have to install **pycryptodome** on your system |br|
+      and create a *dummy* **script.module.pycryptodome** Addon.
+
+.. _repository.back-to: https://github.com/back-to/repo/raw/master/repository.back-to/repository.back-to-5.0.0.zip
+
+
+Enigma2
+-------
+
+  The E2 version will run the command ``liveproxy --host 0.0.0.0 -l debug`` |br|
+  which can be used for local testing without the receiver.
+
+  The source and build files can be found at https://github.com/livecli/ipk
+
+  .. attention::
+
+    This is only tested with a **Vu+ Duo2** |br|
+    which is an E2 receiver with *init.d* and *python2.7*
+
+opkg files
+^^^^^^^^^^
+
+  At the begin you will install the packages from ``opkg``
+
+  .. code-block:: bash
+
+    opkg install python-futures
+    opkg install python-singledispatch
+    opkg install python-six
+    opkg install python-requests
+
+  .. note::
+
+    **python-pycrypto** was preinstalled on my test receiver,
+    you might need to install it on your.
+    |br| |br|
+    If this is not posible you can try
+    **python-pycryptodome** or **python-pycryptodomex**
+
+download files
+^^^^^^^^^^^^^^
+
+  You will have to download all required files, |br|
+  for this example all the files will be saved in ``/tmp``
+
+  The best way is to use the terminal, |br|
+  from the terminal you can use ``wget URL`` to download the files |br|
+  and ``cd /tmp`` to get into the example direction.
+
+  All these files are required.
+
+  - \ |PATH|\ python-backports.shutil-get-terminal-size_1.0.0_all.ipk
+  - \ |PATH|\ python-backports.shutil-which_3.5.1_all.ipk
+  - \ |PATH|\ python-iso3166_0.8_all.ipk
+  - \ |PATH|\ python-iso639_0.4.5_all.ipk
+  - \ |PATH|\ python-socks_1.6.8_all.ipk
+  - \ |PATH|\ python-websocket_0.47.0_all.ipk
+  - \ |PATH|\ python-streamlink_0.12.1.2_all.ipk
+
+install
+^^^^^^^
+
+  For the install after the download,
+  you will have to use ``opkg install PATH_IPK``
+
+  .. note::
+
+    Install python-streamlink_0.12.1.2_all.ipk as the last package
+
+  .. hint::
+
+    You can use the **TAB** key, to autocomplete names |br| |br|
+    *opkg install /tmp/py* |br|
+    **TAB** will be *opkg install /tmp/python-* |br| |br|
+    *opkg install /tmp/python-so* |br|
+    **TAB** will be *opkg install /tmp/python-socks_1.6.8_all.ipk*
+
+after install
+^^^^^^^^^^^^^
+
+  You can test your Streamlink installation in your terminal.
+
+  Type
+
+  ::
+
+    streamlink -l debug
+
+  it should output some information about Streamlink and your system.
+
+service
+^^^^^^^
+
+  Now that Streamlink works, you will have to install the service script.
+
+  .. note::
+
+      This will only work for receiver with *init.d*
+
+  **download**
+
+    - \ |PATH|\ enigma2-liveproxy_7.0.0_all.ipk
+
+  **install**
+
+    ::
+
+      opkg install /tmp/enigma2-liveproxy_7.0.0_all.ipk
+
+  **start the server**
+
+    ::
+
+      update-rc.d /etc/init.d/liveproxy defaults
+
+Known issues
+^^^^^^^^^^^^
+
+SystemTimeWarning
+^^^^^^^^^^^^^^^^^
+
+  This issue comes up if your receiver starts without a satellite signal.
+
+  ::
+
+    /usr/lib/python2.7/site-packages/requests/packages/urllib3/connection.py:303:
+    SystemTimeWarning: System time is way off (before 2014-01-01).
+    This will probably lead to SSL verification errors SystemTimeWarning
+
+  To solve this, you need to install **Network Time Protocol (NTP)** service
+
+  After the install you might need to run
+
+  ::
+
+    update-rc.d /etc/init.d/ntpupdate.sh defaults
