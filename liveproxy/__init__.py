@@ -6,7 +6,7 @@ __all__ = (
 )
 
 __title__ = 'liveproxy'
-__summary__ = 'Local URL Proxy for Streamlink'
+__summary__ = 'LiveProxy is a local Proxyserver between Streamlink and an URL.'
 __uri__ = 'https://github.com/back-to/liveproxy'
 
 __version__ = '0.0.0'
