@@ -1,5 +1,7 @@
 # LiveProxy
 
+[![Build Status](https://travis-ci.org/back-to/liveproxy.svg?branch=master)](https://travis-ci.org/back-to/liveproxy)
+
 - Issue Tracker: https://github.com/back-to/liveproxy/issues
 - Github: https://github.com/back-to/liveproxy
 - Kodi-Repo: https://github.com/back-to/repo

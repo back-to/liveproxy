@@ -3,6 +3,10 @@ Welcome to LiveProxy's documentation!
 
 LiveProxy is a local Proxyserver between Streamlink and an URL.
 
+.. WARNING::
+    LiveProxy is not supposed to run on remote servers,
+    it is only meant for a local network.
+
 LiveProxy
 ^^^^^^^^^
 
