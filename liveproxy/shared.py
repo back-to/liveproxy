@@ -46,7 +46,7 @@ def check_streamlink_version():
         sys.exit(1)
 
 
-def setup_logging(stream=sys.stdout, level='info'):
+def setup_logging(stream=sys.stdout, level='debug'):
     logger.basicConfig(stream=stream, level=level, format='[{name}][{levelname}] {message}', style='{')
 
 
