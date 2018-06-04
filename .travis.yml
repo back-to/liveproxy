@@ -10,11 +10,12 @@ before_install:
   - pip install --upgrade pip setuptools
   - pip install -r requirements-dev.txt
   # only Tested with this streamlink dev version
-  - pip install -U git+https://github.com/back-to/streamlink.git@logging-refactor
+  - pip install -U git+https://github.com/back-to/streamlink.git@liveproxy
 
 install:
   - pip install -e .
 
 script:
+  - liveproxy --version
   - pytest --cov
   - flake8 liveproxy/
