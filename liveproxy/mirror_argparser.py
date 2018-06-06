@@ -769,48 +769,6 @@ def build_parser():
         """
     )
     transport.add_argument(
-        "--hls-segment-ignore-number",
-        type=num(int, min=5),
-        metavar="SEGMENTS",
-        help="""
-        Ignore invalid segment numbers,
-        this option is the max. difference between the valid and invalid number.
-
-        If the valid segment is 100 and this option is set to 20,
-
-        only a segment of 1-80 will be allowed and added,
-        everything between 81-99 will be invalid and not added.
-
-        Default is Disabled.
-        """
-    )
-    transport.add_argument(
-        "--hls-session-reload-segment",
-        action="store_true",
-        help="""
-        Reloads a Streamlink session, if the playlist reload fails twice.
-
-        Default is False.
-
-        Note: This command is meant as a fallback for --hls-session-reload-time
-        if the time is set incorrectly, it might not work for every stream.
-        """)
-    transport.add_argument(
-        "--hls-session-reload-time",
-        type=hours_minutes_seconds,
-        metavar="HH:MM:SS",
-        default=None,
-        help="""
-        Reloads a Streamlink session after the given time.
-
-        Useful for playlists that expire after an amount of time.
-
-        Default is Disabled.
-
-        Note: --hls-segment-ignore-number can be used for new playlists
-        that contain different segment numbers
-        """)
-    transport.add_argument(
         "--hls-audio-select",
         type=comma_list,
         metavar="CODE",

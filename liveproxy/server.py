@@ -7,7 +7,6 @@ import socket
 from collections import OrderedDict
 from contextlib import contextmanager
 from gettext import gettext
-from time import time
 
 from streamlink import (
     Streamlink,
@@ -214,15 +213,6 @@ def setup_options(session, args):
     if args.hls_segment_ignore_names:
         session.set_option('hls-segment-ignore-names', args.hls_segment_ignore_names)
 
-    if args.hls_segment_ignore_number:
-        session.set_option('hls-segment-ignore-number', args.hls_segment_ignore_number)
-
-    if args.hls_session_reload_segment:
-        session.set_option('hls-session-reload-segment', args.hls_session_reload_segment)
-
-    if args.hls_session_reload_time:
-        session.set_option('hls-session-reload-time', args.hls_session_reload_time)
-
     if args.hls_timeout:
         session.set_option('hls-timeout', args.hls_timeout)
 
@@ -426,14 +416,6 @@ def main_play(HTTPBase, redirect=False):
                                           sorted(streams.keys())))
 
                 for stream_name in [stream_name] + alt_streams:
-                    # caches the current streamurl and streamname in to the session
-                    cached_data = {
-                        'url': args.url,
-                        'stream_name': stream_name,
-                        'timestamp': int(time()),
-                    }
-                    session.cached_data.update(cached_data)
-
                     stream = streams[stream_name]
                     stream_type = type(stream).shortname()
 
