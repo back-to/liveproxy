@@ -14,8 +14,6 @@ matrix:
 before_install:
   - pip install --upgrade pip setuptools
   - pip install -r requirements-dev.txt
-  # only Tested with this streamlink dev version
-  - pip install -U git+https://github.com/back-to/streamlink.git@liveproxy
   - if [[ $BUILD_DOCS == 'yes' ]]; then
       pip install -r requirements-docs.txt;
       pip install doctr;
