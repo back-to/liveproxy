@@ -13,7 +13,6 @@ from websocket import __version__ as websocket_version
 from .argparser import parser
 from .shared import (
     check_root,
-    check_streamlink_version,
     setup_logging,
 )
 from .server import (
@@ -55,7 +54,6 @@ def main():
 
     check_root()
     log_current_versions()
-    check_streamlink_version()
 
     if args.help:
         parser.print_help()
