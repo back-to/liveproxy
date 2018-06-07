@@ -9,7 +9,7 @@ __title__ = 'liveproxy'
 __summary__ = 'LiveProxy is a local Proxyserver between Streamlink and an URL.'
 __uri__ = 'https://github.com/back-to/liveproxy'
 
-__version__ = '0.0.0'
+__version__ = '0.0.1'
 
 __author__ = 'back-to'
 __email__ = 'backto@protonmail.ch'

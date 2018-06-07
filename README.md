@@ -1,12 +1,12 @@
 # LiveProxy
 
+[![Build Status](https://travis-ci.org/back-to/liveproxy.svg?branch=master)](https://travis-ci.org/back-to/liveproxy)
+
 LiveProxy is a local Proxyserver between Streamlink and an URL.
 
 ### WARNING
     LiveProxy is not supposed to run on remote servers,
     it is only meant for a local network.
-
-[![Build Status](https://travis-ci.org/back-to/liveproxy.svg?branch=master)](https://travis-ci.org/back-to/liveproxy)
 
 - Issue Tracker: https://github.com/back-to/liveproxy/issues
 - Github: https://github.com/back-to/liveproxy
