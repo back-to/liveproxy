@@ -28,6 +28,7 @@ Streamlink plugins
    install
    url
    plugins
+   known_issues
 
 Indices and tables
 ==================
