@@ -381,16 +381,16 @@ def main_play(HTTPBase, redirect=False):
                     sorting_excludes=args.stream_sorting_excludes)
         except NoPluginError:
             log.error('No plugin can handle URL: {0}', args.url)
-            HTTPBase._headers(404, 'text/html')
+            HTTPBase._headers(404, 'text/html', connection='close')
             return
         except PluginError as err:
             log.error('PluginError {0}', str(err))
-            HTTPBase._headers(404, 'text/html')
+            HTTPBase._headers(404, 'text/html', connection='close')
             return
 
         if not streams:
             log.error('No playable streams found on this URL: {0}', args.url)
-            HTTPBase._headers(404, 'text/html')
+            HTTPBase._headers(404, 'text/html', connection='close')
             return
 
         if args.default_stream and not args.stream:
@@ -475,7 +475,7 @@ def main_play(HTTPBase, redirect=False):
                     break
 
                 if not stream_ended:
-                    HTTPBase._headers(404, 'text/html')
+                    HTTPBase._headers(404, 'text/html', connection='close')
                 return
 
             err = ('The specified stream(s) \'{0}\' could not be '
@@ -483,11 +483,11 @@ def main_play(HTTPBase, redirect=False):
 
             log.error('{0}.\n       Available streams: {1}',
                       err, validstreams)
-            HTTPBase._headers(404, 'text/html')
+            HTTPBase._headers(404, 'text/html', connection='close')
             return
 
         else:
-            HTTPBase._headers(404, 'text/html')
+            HTTPBase._headers(404, 'text/html', connection='close')
             log.error('No URL provided.')
             return
 
@@ -497,15 +497,17 @@ class HTTPRequest(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         log.debug('%s - %s' % (self.address_string(), format % args))
 
-    def _headers(self, status, content):
+    def _headers(self, status, content, connection=False):
         self.send_response(status)
         self.send_header('Server', 'LiveProxy')
         self.send_header('Content-type', content)
+        if connection:
+            self.send_header('Connection', connection)
         self.end_headers()
 
     def do_HEAD(self):
         '''Respond to a HEAD request.'''
-        self._headers(404, 'text/html')
+        self._headers(404, 'text/html', connection='close')
 
     def do_GET(self):
         '''Respond to a GET request.'''
@@ -514,7 +516,7 @@ class HTTPRequest(BaseHTTPRequestHandler):
         elif self.path.startswith('/301/'):
             main_play(self, redirect=True)
         else:
-            self._headers(404, 'text/html')
+            self._headers(404, 'text/html', connection='close')
 
 
 class Server(HTTPServer):
