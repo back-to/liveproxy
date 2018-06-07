@@ -495,7 +495,8 @@ def main_play(HTTPBase, redirect=False):
 class HTTPRequest(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
-        log.debug('%s - %s' % (self.address_string(), format % args))
+        # log.debug('%s - %s' % (self.address_string(), format % args))
+        pass
 
     def _headers(self, status, content, connection=False):
         self.send_response(status)
