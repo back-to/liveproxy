@@ -28,7 +28,7 @@ Version                              Installing
 ==================================== ===========================================
 `Latest release (pip)`_              .. code-block:: console
 
-                                        # pip install -U streamlink
+                                        # pip install -U liveproxy
 `Development version (pip)`_         .. code-block:: console
 
                                         # pip install -U git+https://github.com/back-to/liveproxy.git
@@ -123,7 +123,7 @@ Enigma2
   The E2 version will run the command ``liveproxy --host 0.0.0.0 -l debug`` |br|
   which can be used for local testing without the receiver.
 
-  The source and build files can be found at https://github.com/livecli/ipk
+  The source and build files can be found at https://github.com/back-to/ipk
 
   .. attention::
 

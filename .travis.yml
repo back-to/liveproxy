@@ -18,6 +18,8 @@ before_install:
       pip install -r requirements-docs.txt;
       pip install doctr;
     fi
+  # only Tested with this streamlink version
+  - pip install -U git+https://github.com/streamlink/streamlink.git@2dca7930a938f60b48d8e23260963ea7c49d979f
 
 install:
   - pip install -e .
