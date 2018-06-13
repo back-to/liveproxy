@@ -62,7 +62,7 @@ URL encoded
 
   ::
 
-    http://127.0.0.1:53473/play/?url=https%3A%2F%2Fexample.com%2Fexample
+    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fexample.com%2Fexample
 
 Quality
 -------
@@ -75,7 +75,7 @@ Quality
 
   ::
 
-    http://127.0.0.1:53473/play/?url=URL&q=720p
+    http://127.0.0.1:53422/play/?url=URL&q=720p
 
 Options
 -------
@@ -87,7 +87,7 @@ Options
 
   ::
 
-    http://127.0.0.1:53473/play/?url=URL&http-header=X-Forwarded-For%3D127.0.0.1
+    http://127.0.0.1:53422/play/?url=URL&http-header=X-Forwarded-For%3D127.0.0.1
 
   .. Attention::
       Don't use Usernames and Passwords in the URL, use the configuration file.
@@ -119,7 +119,7 @@ Redirect
 
   ::
 
-    http://127.0.0.1:53473/301/?url=URL
+    http://127.0.0.1:53422/301/?url=URL
 
 
 Userbouquet
@@ -134,13 +134,13 @@ Userbouquet
 
   ::
 
-    http://127.0.0.1:53473/play/?url=URL
+    http://127.0.0.1:53422/play/?url=URL
 
   **After**
 
   ::
 
-    http%3a//127.0.0.1%3a53473/play/?url=URL
+    http%3a//127.0.0.1%3a53422/play/?url=URL
 
 
 Examples
@@ -156,13 +156,13 @@ URL
 
   ::
 
-    http://127.0.0.1:53473/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
+    http://127.0.0.1:53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
 
   **France24**
 
   ::
 
-    http://127.0.0.1:53473/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
+    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
 
 M3U
 ^^^
@@ -172,14 +172,14 @@ M3U
   ::
 
     #EXTINF:-1 tvg-id="EURONEWS" group-title="English;News" tvg-logo="",Euronews
-    http://127.0.0.1:53473/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
+    http://127.0.0.1:53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
 
   **France24**
 
   ::
 
     #EXTINF:-1 tvg-id="France24" group-title="English;News" tvg-logo="",France24
-    http://127.0.0.1:53473/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
+    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
 
 
 Userbouquet
@@ -209,12 +209,12 @@ Userbouquet
 
   ::
 
-    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53473/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive:Euronews
+    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive:Euronews
     #DESCRIPTION Euronews
 
   **France24**
 
   ::
 
-    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53473/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24:France24
+    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24:France24
     #DESCRIPTION France24
