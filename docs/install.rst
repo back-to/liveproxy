@@ -59,7 +59,7 @@ Name                                 Notes
 
 **Automatically installed by the setup script**
 --------------------------------------------------------------------------------
-`python-streamlink`_                 At least version **0.12.1**.
+`python-streamlink`_                 At least version **0.13.0**.
 ==================================== ===========================================
 
 .. _Python: https://www.python.org/
