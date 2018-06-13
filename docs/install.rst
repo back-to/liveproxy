@@ -166,9 +166,11 @@ download files
   - \ |PATH|\ python-backports.shutil-which_3.5.1_all.ipk
   - \ |PATH|\ python-iso3166_0.8_all.ipk
   - \ |PATH|\ python-iso639_0.4.5_all.ipk
+  - \ |PATH|\ python-isodate_0.6.0_all.ipk
   - \ |PATH|\ python-socks_1.6.8_all.ipk
   - \ |PATH|\ python-websocket_0.47.0_all.ipk
-  - \ |PATH|\ python-streamlink_0.12.1.2_all.ipk
+  - \ |PATH|\ python-streamlink_0.13.0.18_all.ipk
+  - \ |PATH|\ python-liveproxy_0.0.1_all.ipk
 
 install
 ^^^^^^^
@@ -178,7 +180,7 @@ install
 
   .. note::
 
-    Install python-streamlink_0.12.1.2_all.ipk as the last package
+    Install python-streamlink and python-liveproxy as the last packages
 
   .. hint::
 
@@ -212,19 +214,19 @@ service
 
   **download**
 
-    - \ |PATH|\ enigma2-liveproxy_7.0.0_all.ipk
+    - \ |PATH|\ enigma2-liveproxy-server_1.0.0_all.ipk
 
   **install**
 
     ::
 
-      opkg install /tmp/enigma2-liveproxy_7.0.0_all.ipk
+      opkg install /tmp/enigma2-liveproxy-server_1.0.0_all.ipk
 
   **start the server**
 
     ::
 
-      update-rc.d /etc/init.d/liveproxy defaults
+      update-rc.d /etc/init.d/liveproxy-server defaults
 
 Known issues
 ^^^^^^^^^^^^
