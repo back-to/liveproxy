@@ -120,7 +120,7 @@ Kodi
 Enigma2
 -------
 
-  The E2 version will run the command ``liveproxy --host 0.0.0.0 -l debug`` |br|
+  The E2 version will run the command ``liveproxy --host 0.0.0.0`` |br|
   which can be used for local testing without the receiver.
 
   The source and build files can be found at https://github.com/back-to/ipk
