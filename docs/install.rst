@@ -66,34 +66,6 @@ Name                                 Notes
 .. _python-setuptools: https://pypi.org/project/setuptools/
 .. _python-streamlink: https://pypi.org/project/streamlink/
 
-Installing without root permissions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-If you do not wish to install Streamlink globally on your system it's
-recommended to use `venv`_ to create a user owned Python environment instead.
-
-.. code-block:: console
-
-    Creating an environment
-    $ python3 -m venv ~/myenv
-
-    Activating the environment
-    $ source ~/myenv/bin/activate
-
-    Installing streamlink into the environment
-    (myenv)$ pip install liveproxy
-
-    Using streamlink in the environment
-    (myenv)$ liveproxy ...
-
-    Deactivating the environment
-    (myenv)$ deactivate
-
-    Using streamlink without activating the environment
-    $ ~/myenv/bin/liveproxy ...
-
-.. _venv: https://docs.python.org/3/library/venv.html
-
 Kodi
 ----
 
