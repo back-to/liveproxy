@@ -21,6 +21,7 @@ from streamlink.compat import (
 )
 from streamlink.plugin import PluginOptions
 from streamlink.stream import HDSStream, HTTPStream
+from streamlink.stream.dash import DASHStream
 from streamlink.stream.ffmpegmux import MuxedStream
 
 from .compat import BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn
@@ -422,12 +423,19 @@ def main_play(HTTPBase, redirect=False):
                     log.info('Opening stream: {0} ({1})', stream_name,
                              stream_type)
 
-                    if not isinstance(stream, (HDSStream, HTTPStream, MuxedStream)):
+                    if not isinstance(stream, (HDSStream,
+                                               HTTPStream,
+                                               MuxedStream,
+                                               DASHStream,
+                                               )):
                         # allow only http based streams: HDS HLS HTTP
                         # RTMP is not supported
                         log.warning('only HTTP, HLS, HDS or MuxedStreams are supported.')
                         log.debug(str(type(stream)))
                         continue
+                    elif isinstance(stream, (MuxedStream, DASHStream)):
+                        log.warning('FFmpeg streams (dash, muxed) '
+                                    'might not work on every platform.')
 
                     # 301
                     if redirect is True:
