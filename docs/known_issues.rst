@@ -50,3 +50,11 @@ currently a bit broken
     DEBUG: .
     DEBUG: [stream.hls][debug] Reloading playlist
     DEBUG: .
+
+FFmpeg and RTMP
+^^^^^^^^^^^^^^^
+
+FFmpeg and RTMP streams might not work on every platform,
+they work on Linux, but not on Windows for me.
+
+Don't use them if it doesn't work for you.

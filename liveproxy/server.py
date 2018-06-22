@@ -20,7 +20,7 @@ from streamlink.compat import (
     urlparse,
 )
 from streamlink.plugin import PluginOptions
-from streamlink.stream import HDSStream, HTTPStream
+from streamlink.stream import RTMPStream
 from streamlink.stream.dash import DASHStream
 from streamlink.stream.ffmpegmux import MuxedStream
 
@@ -115,8 +115,8 @@ def load_plugins(session, dirs):
         if os.path.isdir(directory):
             session.load_plugins(directory)
         else:
-            log.warning('Plugin path {0} does not exist or is not '
-                        'a directory!', directory)
+            log.info('Plugin path {0} does not exist or is not '
+                     'a directory!', directory)
 
 
 def setup_config_args(session, args, parser, arglist):
@@ -423,19 +423,12 @@ def main_play(HTTPBase, redirect=False):
                     log.info('Opening stream: {0} ({1})', stream_name,
                              stream_type)
 
-                    if not isinstance(stream, (HDSStream,
-                                               HTTPStream,
-                                               MuxedStream,
-                                               DASHStream,
-                                               )):
-                        # allow only http based streams: HDS HLS HTTP
-                        # RTMP is not supported
-                        log.warning('only HTTP, HLS, HDS or MuxedStreams are supported.')
-                        log.debug(str(type(stream)))
-                        continue
+                    if isinstance(stream, (RTMPStream)):
+                        log.info('RTMP streams '
+                                 'might not work on every platform.')
                     elif isinstance(stream, (MuxedStream, DASHStream)):
-                        log.warning('FFmpeg streams (dash, muxed) '
-                                    'might not work on every platform.')
+                        log.info('FFmpeg streams (dash, muxed) '
+                                 'might not work on every platform.')
 
                     # 301
                     if redirect is True:
