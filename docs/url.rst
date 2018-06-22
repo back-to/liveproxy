@@ -40,6 +40,11 @@ The host or port can be changed with `--host` or `--port`
 
 Now that LiveProxy is running, you will have to create a valid proxy url.
 
+.. Hint::
+    There is also a tool that will create a valid m3u file for LiveProxy,
+    it requires Python 3.6+ |br|
+    https://github.com/back-to/iptv for more informations.
+
 For this Examples ``53422`` is used as the **default port**.
 
 Basic URL
