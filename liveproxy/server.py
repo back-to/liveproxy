@@ -513,9 +513,9 @@ class HTTPRequest(BaseHTTPRequestHandler):
 
     def do_GET(self):
         '''Respond to a GET request.'''
-        if self.path.startswith('/play/'):
+        if self.path.startswith(('/play/', '/streamlink/')):
             main_play(self)
-        elif self.path.startswith('/301/'):
+        elif self.path.startswith(('/301/', '/streamlink_301/')):
             main_play(self, redirect=True)
         else:
             self._headers(404, 'text/html', connection='close')
