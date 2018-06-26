@@ -59,7 +59,7 @@ Name                                 Notes
 
 **Automatically installed by the setup script**
 --------------------------------------------------------------------------------
-`python-streamlink`_                 At least version **0.13.0**.
+`python-streamlink`_                 At least version **0.14.0**.
 ==================================== ===========================================
 
 .. _Python: https://www.python.org/
@@ -141,8 +141,8 @@ download files
   - \ |PATH|\ python-isodate_0.6.0_all.ipk
   - \ |PATH|\ python-socks_1.6.8_all.ipk
   - \ |PATH|\ python-websocket_0.47.0_all.ipk
-  - \ |PATH|\ python-streamlink_0.13.0.50_all.ipk
-  - \ |PATH|\ python-liveproxy_0.0.2_all.ipk
+  - \ |PATH|\ python-streamlink_0.14.0_all.ipk
+  - \ |PATH|\ python-liveproxy_0.0.3_all.ipk
 
 install
 ^^^^^^^
