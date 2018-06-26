@@ -1,33 +1,50 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import io
+import codecs
 import os
+import re
 
 from setuptools import setup
 
-import liveproxy
-
 here = os.path.abspath(os.path.dirname(__file__))
 
-with io.open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = '\n' + f.read()
+
+def read(*parts):
+    with codecs.open(os.path.join(here, *parts), 'r') as fp:
+        return fp.read()
+
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(
+        r'''^__version__ = ['"]([^'"]*)['"]''',
+        version_file,
+        re.M,
+    )
+    if version_match:
+        return version_match.group(1)
+
+    raise RuntimeError('Unable to find version string.')
+
+
+long_description = read('README.md')
 
 setup(
-    name=liveproxy.__title__,
-    version=liveproxy.__version__,
-    description=liveproxy.__summary__,
+    name='liveproxy',
+    version=find_version('liveproxy', '__init__.py'),
+    description='LiveProxy is a local Proxyserver between Streamlink and an URL.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    license=liveproxy.__license__,
-    url=liveproxy.__uri__,
+    license='BSD 2-Clause "Simplified" License',
+    url='https://github.com/back-to/liveproxy',
     project_urls={
         'Documentation': 'https://liveproxy.github.io/',
         'Source': 'https://github.com/back-to/liveproxy/',
         'Tracker': 'https://github.com/back-to/liveproxy/issues',
     },
-    author=liveproxy.__author__,
-    author_email=liveproxy.__email__,
+    author='back-to',
+    author_email='backto@protonmail.ch',
     packages=['liveproxy'],
     entry_points={
         'console_scripts': [
@@ -35,11 +52,11 @@ setup(
         ],
     },
     install_requires=[
-        'streamlink>=0.13.0, <1',
+        'streamlink>=0.14.0, <1',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 4 - Beta',
         'Environment :: Console',
         'Intended Audience :: End Users/Desktop',
         'License :: OSI Approved :: BSD License',
