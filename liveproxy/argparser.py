@@ -32,7 +32,7 @@ parser = ArgumentParser(
     '''),
     epilog=dedent('''
     For more in-depth documentation see:
-      https://github.com/back-to/liveproxy
+      https://liveproxy.github.io/
     ''')
 )
 
