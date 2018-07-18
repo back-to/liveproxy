@@ -9,6 +9,7 @@ from collections import OrderedDict
 from contextlib import contextmanager
 from gettext import gettext
 
+from streamlink import plugins
 from streamlink import (
     Streamlink,
     StreamError,
@@ -16,6 +17,7 @@ from streamlink import (
     NoPluginError,
 )
 from streamlink.compat import (
+    is_py2,
     parse_qsl,
     unquote,
     urlparse,
@@ -31,6 +33,26 @@ from .mirror_argparser import build_parser
 from .shared import logger
 
 log = logging.getLogger('streamlink.liveproxy-server')
+
+
+class TempData(object):
+    pass
+
+
+class LiveProxyStreamlink(Streamlink):
+    def load_builtin_plugins(self):
+        if not hasattr(TempData, '_loaded_plugins'):
+            self.load_plugins(plugins.__path__[0])
+            TempData._loaded_plugins = self.plugins.copy()
+        else:
+            self.plugins = TempData._loaded_plugins.copy()
+            if is_py2:
+                # Python 2.7
+                for plugin in self.plugins.itervalues():
+                    plugin.session = self
+            else:
+                for plugin in iter(self.plugins.values()):
+                    plugin.session = self
 
 
 # copy of - from .utils import ignored
@@ -337,7 +359,7 @@ def main_play(HTTPBase, redirect=False):
     args = setup_args(parser, arglist, ignore_unknown=True)
 
     # create a new session for every request
-    session = Streamlink()
+    session = LiveProxyStreamlink()
 
     log.info('User-Agent: {0}'.format(HTTPBase.headers.get('User-Agent', '???')))
     log.info('Client: {0}'.format(HTTPBase.client_address))
