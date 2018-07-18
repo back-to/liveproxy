@@ -2,6 +2,8 @@
 
 ## 0.0.4.dev0
 
+This version works only with the Development version of Streamlink.
+
 ### Added
 
 - Improve Streamlink default Plugins load speed
