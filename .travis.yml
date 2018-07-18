@@ -7,9 +7,9 @@ matrix:
   - python: '3.5'
   - python: '3.6'
     env: BUILD_DOCS=yes
-  - python: '3.7-dev'
-  allow_failures:
-  - python: '3.7-dev'
+  - python: '3.7'
+    dist: xenial
+    sudo: true
 
 before_install:
   - pip install --upgrade pip setuptools
@@ -19,7 +19,7 @@ before_install:
       pip install doctr;
     fi
   # only Tested with this streamlink version
-  # - pip install -U git+https://github.com/streamlink/streamlink.git@aee0b9e34f2f64b118c0e7f81f7ed1be83ac06da
+  - pip install -U git+https://github.com/streamlink/streamlink.git@33f677b6fe43582d1789884253ccde96705376eb
 
 install:
   - pip install -e .
