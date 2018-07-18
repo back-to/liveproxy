@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.0.4.dev0
+
+### Added
+
+- Improve Streamlink default Plugins load speed
+
+### Changed
+
+- Custom plugins with `from streamlink.plugin.api import http` are not allowed,
+  use `self.session`
+
 ## 0.0.3
 
 Skip 0.0.2 because it was used as a hotfix for E2.
