@@ -141,7 +141,7 @@ download files
   - \ |PATH|\ python-isodate_0.6.0_all.ipk
   - \ |PATH|\ python-socks_1.6.8_all.ipk
   - \ |PATH|\ python-websocket_0.47.0_all.ipk
-  - \ |PATH|\ python-streamlink_0.14.2.33_all.ipk
+  - \ |PATH|\ python-streamlink_0.14.2.42_all.ipk
   - \ |PATH|\ python-liveproxy_0.0.4_all.ipk
 
 install
