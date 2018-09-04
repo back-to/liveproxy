@@ -15,12 +15,7 @@ LiveProxy
 - Kodi-Repo: https://github.com/back-to/repo
 - Kodi-Repo-Zip: https://github.com/back-to/repo/raw/master/repository.back-to/repository.back-to-5.0.0.zip
 - Enigma2: https://github.com/back-to/ipk
-
-Streamlink plugins
-^^^^^^^^^^^^^^^^^^
-
-- Custom plugins issue tracker: https://github.com/back-to/plugins/issues
-- Default plugins issue tracker: https://github.com/streamlink/streamlink/issues
+- Streamlink issue tracker: https://github.com/streamlink/streamlink/issues
 
 .. toctree::
    :maxdepth: 2

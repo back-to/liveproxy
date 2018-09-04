@@ -13,29 +13,6 @@ Sideloading plugins
 
 .. _Streamlink-sideloading-plugins: https://streamlink.github.io/cli.html#sideloading-plugins
 
-back-to plugins
----------------
-
-  The custom plugins from back-to can be found at `back-to/plugins`_,
-  they can be sideloaded with `Streamlink-sideloading-plugins`_
-
-Install Kodi
-^^^^^^^^^^^^
-
-  Install Guide for Kodi
-
-  - open in Kodi **Add-ons / Add-on browser**
-  - click on **Install from repository**
-  - click on **back-to repository**
-  - click on **service**
-  - click on **LiveProxy**
-  - click on **Dependencies**
-  - search for **back-to plugins**
-  - install it
-  - done
-
-.. _back-to/plugins: https://github.com/back-to/plugins
-.. _Streamlink-sideloading-plugins: https://streamlink.github.io/cli.html#sideloading-plugins
 
 custom plugins Kodi
 -------------------
