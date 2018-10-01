@@ -9,18 +9,18 @@ from collections import OrderedDict
 from contextlib import contextmanager
 from gettext import gettext
 
-from streamlink import plugins
-from streamlink import (
-    Streamlink,
-    StreamError,
-    PluginError,
-    NoPluginError,
-)
+from streamlink import plugins, Streamlink
 from streamlink.compat import (
     is_py2,
     parse_qsl,
     unquote,
     urlparse,
+)
+from streamlink.exceptions import (
+    FatalPluginError,
+    NoPluginError,
+    PluginError,
+    StreamError,
 )
 from streamlink.plugin import PluginOptions
 from streamlink.stream import RTMPStream
@@ -345,7 +345,11 @@ def setup_plugin_options(session, args, plugin):
     if required:
         for req in required.values():
             if not session.get_plugin_option(pname, req.dest):
-                log.error('Missing required {0} for {1}'.format(req.name, pname))
+                prompt = req.prompt or 'Enter {0} {1}'.format(pname, req.name)
+                session.set_plugin_option(pname, req.dest,
+                                          plugin.input_ask_password(prompt)
+                                          if req.sensitive else
+                                          plugin.input_ask(prompt))
 
 
 def main_play(HTTPBase, redirect=False):
@@ -404,6 +408,10 @@ def main_play(HTTPBase, redirect=False):
                     args.url,
                     stream_types=args.stream_types,
                     sorting_excludes=args.stream_sorting_excludes)
+        except FatalPluginError as err:
+            log.error('FatalPluginError {0}', str(err))
+            HTTPBase._headers(404, 'text/html', connection='close')
+            return
         except NoPluginError:
             log.error('No plugin can handle URL: {0}', args.url)
             HTTPBase._headers(404, 'text/html', connection='close')
