@@ -352,13 +352,7 @@ def setup_plugin_options(session, args, plugin):
                                           plugin.input_ask(prompt))
 
 
-def main_play(HTTPBase, redirect=False):
-    # parse url query data
-    old_data = parse_qsl(urlparse(HTTPBase.path).query)
-    arglist = []
-    for k, v in old_data:
-        arglist += ['--{0}'.format(unquote(k)), unquote(v)]
-
+def main_play(HTTPBase, arglist, redirect=False):
     parser = build_parser()
     args = setup_args(parser, arglist, ignore_unknown=True)
 
@@ -525,6 +519,17 @@ def main_play(HTTPBase, redirect=False):
             return
 
 
+def arglist_from_query(path):
+    old_data = parse_qsl(urlparse(path).query)
+    arglist = []
+    for k, v in old_data:
+        if k == 'q':
+            # backwards compatibility --q
+            k = 'default-stream'
+        arglist += ['--{0}'.format(unquote(k)), unquote(v)]
+    return arglist
+
+
 class HTTPRequest(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
@@ -546,9 +551,13 @@ class HTTPRequest(BaseHTTPRequestHandler):
     def do_GET(self):
         '''Respond to a GET request.'''
         if self.path.startswith(('/play/', '/streamlink/')):
-            main_play(self)
+            # http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst
+            arglist = arglist_from_query(self.path)
+            main_play(self, arglist)
         elif self.path.startswith(('/301/', '/streamlink_301/')):
-            main_play(self, redirect=True)
+            # http://127.0.0.1:53422/301/?url=https://foo.bar&q=worst
+            arglist = arglist_from_query(self.path)
+            main_play(self, arglist, redirect=True)
         else:
             self._headers(404, 'text/html', connection='close')
 
