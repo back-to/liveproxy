@@ -8,7 +8,6 @@ import sys
 from liveproxy import __version__ as liveproxy_version
 from requests import __version__ as requests_version
 from streamlink import __version__ as streamlink_version
-from websocket import __version__ as websocket_version
 
 from .argparser import parser
 from .shared import (
@@ -37,12 +36,11 @@ def log_current_versions():
         os_version = platform.platform()
 
     log.info('For LiveProxy support visit https://github.com/back-to/liveproxy')
-    log.debug('OS:            {0}'.format(os_version))
-    log.debug('Python:        {0}'.format(platform.python_version()))
-    log.debug('LiveProxy:     {0}'.format(liveproxy_version))
-    log.debug('Streamlink:    {0}'.format(streamlink_version))
-    log.debug('Requests({0}), Websocket({1})'.format(
-        requests_version, websocket_version))
+    log.debug('OS:         {0}'.format(os_version))
+    log.debug('Python:     {0}'.format(platform.python_version()))
+    log.debug('LiveProxy:  {0}'.format(liveproxy_version))
+    log.debug('Streamlink: {0}'.format(streamlink_version))
+    log.debug('Requests:   {0}'.format(requests_version))
 
 
 def main():
