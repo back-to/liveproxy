@@ -32,6 +32,17 @@ from .constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
 from .mirror_argparser import build_parser
 from .shared import logger
 
+ACCEPTABLE_ERRNO = (
+    errno.ECONNABORTED,
+    errno.ECONNRESET,
+    errno.EINVAL,
+    errno.EPIPE,
+)
+try:
+    ACCEPTABLE_ERRNO += (errno.WSAECONNABORTED,)
+except AttributeError:
+    pass  # Not windows
+
 log = logging.getLogger('streamlink.liveproxy-server')
 
 
@@ -566,9 +577,18 @@ class Server(HTTPServer):
     '''HTTPServer class with timeout.'''
     timeout = 5
 
+    def finish_request(self, request, client_address):
+        """Finish one request by instantiating RequestHandlerClass."""
+        try:
+            self.RequestHandlerClass(request, client_address, self)
+        except socket.error as err:
+            if err.errno not in ACCEPTABLE_ERRNO:
+                raise
+
 
 class ThreadedHTTPServer(ThreadingMixIn, Server):
     '''Handle requests in a separate thread.'''
+    allow_reuse_address = True
     daemon_threads = True
 
 

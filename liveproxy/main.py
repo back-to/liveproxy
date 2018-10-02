@@ -61,10 +61,8 @@ def main():
 
         log.info('Starting server: {0} on port {1}'.format(HOST, PORT))
 
-        server_class = ThreadedHTTPServer
-        server_class.allow_reuse_address = True
         try:
-            httpd = server_class((HOST, PORT), HTTPRequest)
+            httpd = ThreadedHTTPServer((HOST, PORT), HTTPRequest)
         except OSError as err:
             if err.errno == errno.EADDRINUSE:
                 log.error('Could not listen on port {0}! Exiting...'.format(PORT))
