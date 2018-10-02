@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import argparse
+import base64
 import errno
 import logging
 import os
+import shlex
 import socket
 
 from collections import OrderedDict
@@ -569,6 +571,13 @@ class HTTPRequest(BaseHTTPRequestHandler):
             # http://127.0.0.1:53422/301/?url=https://foo.bar&q=worst
             arglist = arglist_from_query(self.path)
             main_play(self, arglist, redirect=True)
+        elif self.path.startswith(('/base64/')):
+            # http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
+            base64_path = urlparse(self.path).path.split('/')
+            arglist = shlex.split(base64.b64decode(base64_path[2]).decode('UTF-8'))
+            if arglist[0].lower() == 'streamlink':
+                arglist = arglist[1:]
+            main_play(self, arglist)
         else:
             self._headers(404, 'text/html', connection='close')
 

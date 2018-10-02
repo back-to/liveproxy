@@ -42,6 +42,29 @@ Now that LiveProxy is running, you will have to create a valid proxy url.
 
 For this Examples ``53422`` is used as the **default port**.
 
+Base64
+------
+
+  The URL build was simplified, the normal Streamlink command can be used
+  after it was base64 encoded.
+
+  Basic URL, the `STREAMLINK-COMMANDS` must be replaced with your command.
+
+  ::
+
+    http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
+
+  Example for `streamlink https://www.youtube.com/user/france24 best`
+
+  ::
+
+    http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
+
+  Redirect with `--player-passthrough` is currently not supported,
+  it will be added in a future update.
+
+  If you use this method, most of the following Guide can be ignored.
+
 Basic URL
 ---------
 
