@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import base64
+import codecs
 import errno
 import logging
+import os
 import platform
 import sys
 
@@ -53,12 +56,47 @@ def main():
     check_root()
     log_current_versions()
 
+    HOST = args.host
+    PORT = int(args.port)
+
     if args.help:
         parser.print_help()
-    else:
-        HOST = args.host
-        PORT = int(args.port)
+    elif args.file:
+        if not os.path.isfile(args.file):
+            log.error('File does not exist: {0}'.format(args.file))
+            return
+        elif not os.access(args.file, os.F_OK):
+            log.error('Can\'t read file: {0}'.format(args.file))
+            return
 
+        if args.format == 'm3u':
+            URL_TEMPLATE = 'http://{host}:{port}/base64/{base64}/'
+            # %3a
+        elif args.format == 'e2':
+            URL_TEMPLATE = 'http%3a//{host}%3a{port}/base64/{base64}/'
+        else:
+            return
+
+        new_lines = []
+        log.info('open old file')
+        with codecs.open(args.file, 'r', 'utf-8') as temp:
+            text = temp.read()
+            for line in text.splitlines():
+                if line.startswith('streamlink'):
+                    line = URL_TEMPLATE.format(
+                        host=HOST,
+                        port=PORT,
+                        base64=base64.b64encode(line.encode('utf-8')).decode('utf-8'),
+                    )
+                new_lines.append(line)
+
+        log.info('open new file')
+        with codecs.open(args.file + '.new', 'w', 'utf-8') as new_temp:
+            for line in new_lines:
+                new_temp.write(line + '\n')
+
+        log.info('Done.')
+    else:
         log.info('Starting server: {0} on port {1}'.format(HOST, PORT))
 
         try:

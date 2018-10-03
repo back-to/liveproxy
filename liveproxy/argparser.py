@@ -62,6 +62,8 @@ server.add_argument(
     help='''
     A fixed IP to use as a HOST.
 
+    Can also be used for `--file`
+
     Default is 127.0.0.1.
     '''
 )
@@ -73,8 +75,36 @@ server.add_argument(
     help='''
     A fixed PORT to use for the HOST.
 
+    Can also be used for `--file`
+
     Default is 53422.
     '''
+)
+
+url = parser.add_argument_group('URL options')
+url.add_argument(
+    '--file',
+    metavar='FILE',
+    help='''
+    Read the given file and create a new file with base64
+    encoded URLs for LiveProxy.
+
+    It will only encode lines that starts with `streamlink`,
+    other lines will be ignored.
+    '''
+)
+url.add_argument(
+    '--format',
+    default='m3u',
+    choices=['m3u', 'e2'],
+    help='''
+    Some playlists need special settings:
+
+    For E2 Linux Receivers with Userbouquets,
+    use `--format e2`
+
+    Default is m3u
+    ''',
 )
 
 __all__ = ['parser']

@@ -1,17 +1,22 @@
 # Changelog
 
-## 0.0.4.dev0
-
-This version works only with the Development version of Streamlink.
+## 0.0.4.dev2
 
 ### Added
 
 - Improve Streamlink default Plugins load speed
+- New commands `--file` and `--format` got added,
+  they can create valid URLs from a file for the new base64 URL style.
 
 ### Changed
 
 - Custom plugins with `from streamlink.plugin.api import http` are not allowed,
   use `self.session`
+- The LiveProxy URL build was simplified, a Streamlink command like
+  `streamlink https://www.youtube.com/user/france24 best`
+  can be used after it got base64 encoded.
+  URL example `http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/`
+  more details can be found on the website.
 
 ## 0.0.3
 

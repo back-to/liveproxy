@@ -45,10 +45,9 @@ For this Examples ``53422`` is used as the **default port**.
 Base64
 ------
 
-  The URL build was simplified, the normal Streamlink command can be used
-  after it was base64 encoded.
-
-  Basic URL, the `STREAMLINK-COMMANDS` must be replaced with your command.
+  The LiveProxy URL build was simplified,
+  the `STREAMLINK-COMMANDS` part must be replaced with your Streamlink commands
+  after they got base64 encoded.
 
   ::
 
@@ -63,57 +62,40 @@ Base64
   Redirect with `--player-passthrough` is currently not supported,
   it will be added in a future update.
 
-  If you use this method, most of the following Guide can be ignored.
+  LiveProxy can create this URL automatically.
 
-Basic URL
----------
-
-  The basic url where Livecli will handle the playback looks like this.
+  Create a new file with your Streamlink commands.
 
   ::
 
-    http://127.0.0.1:53422/play/?url=https://www.youtube.com/user/france24
+      #EXTM3U
+      #EXTINF:-1,Arte FR
+      streamlink https://www.arte.tv/fr/direct/ 720p,720p_alt,best
+      #EXTINF:-1,France24
+      streamlink https://www.youtube.com/user/france24 best
+      #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
+      streamlink https://www.euronews.com/live best
 
-URL encoded
------------
-
-  The above solution will work for the most websites, |br|
-  but URLs with special characters such as ``?`` or ``&`` might not work.
-
-  For this case every parameter should be URL encoded, |br|
-  the website `urlencoder.org <https://www.urlencoder.org/>`_ can be used for this.
-
-  ::
-
-    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fexample.com%2Fexample
-
-Quality
--------
-
-  By default LiveProxy will open the best quality, |br|
-  if you want a different quality you can use the parameter ``q`` |br|
-  with every new parameter, you must add an ``&``
-
-  For this example we will have the parameter ``url`` and ``q``
+  For this example the filename is `example.m3u`,
+  create a valid URL for LiveProxy.
 
   ::
 
-    http://127.0.0.1:53422/play/?url=URL&q=720p
+      liveproxy --file example.m3u
 
-Options
--------
-
-  The **/play/** url can almoste handle every Streamlink command.
-
-  Example ``--http-header "X-Forwarded-For=127.0.0.1"`` |br|
-  will be ``http-header=X-Forwarded-For%3D127.0.0.1``
+  It will create a new file `example.m3u.new` with valid URLs,
+  only lines with `streamlink` at the start will be changed.
 
   ::
 
-    http://127.0.0.1:53422/play/?url=URL&http-header=X-Forwarded-For%3D127.0.0.1
+      #EXTM3U
+      #EXTINF:-1,Arte FR
+      http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5hcnRlLnR2L2ZyL2RpcmVjdC8gNzIwcCw3MjBwX2FsdCxiZXN0/
+      #EXTINF:-1,France24
+      http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
+      #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
+      http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 
-  .. Attention::
-      Don't use Usernames and Passwords in the URL, use the configuration file.
 
 Configuration file
 ------------------
@@ -132,43 +114,9 @@ Configuration file
 
 .. _Streamlink-configuration-file: https://streamlink.github.io/cli.html#configuration-file
 
-Redirect
---------
-
-  There is also a different version which only redirects the streaming url, |br|
-  only the basic parameter will work for this such as ``url`` and ``q``
-
-  LiveProxy is only used to get the url, your Player will handle the playback.
-
-  ::
-
-    http://127.0.0.1:53422/301/?url=URL
-
-
-Userbouquet
------------
-
-  .. attention::
-
-    Because this is used for the Userbouquet **:** is not allowed in the URL, |br|
-    you will have to replace **:** with **%3a**
-
-  **Before**
-
-  ::
-
-    http://127.0.0.1:53422/play/?url=URL
-
-  **After**
-
-  ::
-
-    http%3a//127.0.0.1%3a53422/play/?url=URL
-
 
 Examples
 --------
-
 
 URL
 ^^^
@@ -179,13 +127,13 @@ URL
 
   ::
 
-    http://127.0.0.1:53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
+      http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 
   **France24**
 
   ::
 
-    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
+      http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
 
 M3U
 ^^^
@@ -195,14 +143,14 @@ M3U
   ::
 
     #EXTINF:-1 tvg-id="EURONEWS" group-title="English;News" tvg-logo="",Euronews
-    http://127.0.0.1:53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive
+    http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 
   **France24**
 
   ::
 
     #EXTINF:-1 tvg-id="France24" group-title="English;News" tvg-logo="",France24
-    http://127.0.0.1:53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24
+    http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
 
 
 Userbouquet
@@ -232,12 +180,12 @@ Userbouquet
 
   ::
 
-    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/play/?url=https%253A%252F%252Fwww.euronews.com%252Flive:Euronews
+    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/:Euronews
     #DESCRIPTION Euronews
 
   **France24**
 
   ::
 
-    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/play/?url=https%3A%2F%2Fwww.youtube.com%2Fuser%2Ffrance24:France24
+    #SERVICE 4097:0:1:0:0:0:0:0:0:0:http%3a//127.0.0.1%3a53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/:France24
     #DESCRIPTION France24
