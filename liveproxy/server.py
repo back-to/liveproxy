@@ -137,7 +137,8 @@ def setup_args(parser, arglist=[], config_files=[], ignore_unknown=True):
     if args.stream:
         args.stream = [stream.lower() for stream in args.stream]
 
-    if not args.url and args.url_param:
+    # force --url as args.url
+    if args.url_param:
         args.url = args.url_param
     return args
 
