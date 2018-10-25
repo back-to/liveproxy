@@ -1,6 +1,12 @@
 # Changelog
 
-## 0.0.4.dev2
+## 0.1.1
+
+### Changed
+
+- if `--url` was used as an argument, it will be used instead of the nargs
+
+## 0.1.0
 
 ### Added
 
