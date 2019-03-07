@@ -4,6 +4,9 @@ from string import printable
 from textwrap import dedent
 
 from streamlink import logger
+from streamlink.utils.args import (
+    boolean, comma_list, comma_list_filter, filesize, keyvalue, num
+)
 from streamlink.utils.times import hours_minutes_seconds
 from .constants import (
     LIVESTREAMER_VERSION, STREAM_PASSTHROUGH, DEFAULT_PLAYER_ARGUMENTS, DEFAULT_STREAM_METADATA, SUPPORTED_PLAYERS
@@ -19,86 +22,6 @@ _option_re = re.compile(r"""
     \s*
     (?P<value>.*) # The value, anything goes.
 """, re.VERBOSE)
-
-_filesize_re = re.compile(r'''
-    (?P<size>\d+(\.\d+)?)
-    (?P<modifier>[Kk]|[Mm])?
-    (?:[Bb])?
-''', re.VERBOSE)
-_keyvalue_re = re.compile(r'(?P<key>[^=]+)\s*=\s*(?P<value>.*)')
-
-
-def boolean(value):
-    truths = ['yes', '1', 'true', 'on']
-    falses = ['no', '0', 'false', 'off']
-    if value.lower() not in truths + falses:
-        raise argparse.ArgumentTypeError('{0} was not one of {{{1}}}'.format(
-            value, ', '.join(truths + falses)))
-
-    return value.lower() in truths
-
-
-def comma_list(values):
-    return [val.strip() for val in values.split(',')]
-
-
-def comma_list_filter(acceptable):
-    def func(p):
-        values = comma_list(p)
-        return list(filter(lambda v: v in acceptable, values))
-
-    return func
-
-
-def filesize(value):
-    match = _filesize_re.match(value)
-    if not match:
-        raise ValueError
-
-    size = float(match.group('size'))
-    if not size:
-        raise ValueError
-
-    modifier = match.group('modifier')
-    if modifier in ('M', 'm'):
-        size *= 1024 * 1024
-    elif modifier in ('K', 'k'):
-        size *= 1024
-
-    return num(int, min=0)(size)
-
-
-def keyvalue(value):
-    match = _keyvalue_re.match(value)
-    if not match:
-        raise ValueError
-
-    return match.group('key', 'value')
-
-
-def num(type, min=None, max=None):
-    def func(value):
-        value = type(value)
-
-        if min is not None and not (value > min):
-            raise argparse.ArgumentTypeError(
-                '{0} value must be more than {1} but is {2}'.format(
-                    type.__name__, min, value
-                )
-            )
-
-        if max is not None and not (value <= max):
-            raise argparse.ArgumentTypeError(
-                '{0} value must be at most {1} but is {2}'.format(
-                    type.__name__, max, value
-                )
-            )
-
-        return value
-
-    func.__name__ = type.__name__
-
-    return func
 
 
 class ArgumentParser(argparse.ArgumentParser):
@@ -184,7 +107,7 @@ def build_parser():
         help="""
         Stream to play.
 
-        Use "best" or "worst" for selecting the highest or lowest available
+        Use ``best`` or ``worst`` for selecting the highest or lowest available
         quality.
 
         Fallback streams can be specified by using a comma-separated list:
@@ -542,6 +465,9 @@ def build_parser():
             gaming oriented platforms. "Game being played" is a way to categorize
             the stream, so it doesn't need its own separate handling.
 
+        {{url}}
+            URL of the stream.
+
         Examples:
 
             %(prog)s -p vlc --title "{{title}} -!- {{author}} -!- {{category}} \\$A" <url> [stream]
@@ -567,7 +493,7 @@ def build_parser():
         "-f", "--force",
         action="store_true",
         help="""
-        When using -o, always write to file even if it already exists.
+        When using -o or -r, always write to file even if it already exists.
         """
     )
     output.add_argument(
@@ -575,6 +501,24 @@ def build_parser():
         action="store_true",
         help="""
         Write stream data to stdout instead of playing it.
+        """
+    )
+    output.add_argument(
+        "-r", "--record",
+        metavar="FILENAME",
+        help="""
+        Open the stream in the player, while at the same time writing it to FILENAME.
+
+        You will be prompted if the file already exists.
+        """
+    )
+    output.add_argument(
+        "-R", "--record-and-pipe",
+        metavar="FILENAME",
+        help="""
+        Write stream data to stdout, while at the same time writing it to FILENAME.
+
+        You will be prompted if the file already exists.
         """
     )
 
@@ -600,7 +544,7 @@ def build_parser():
         help="""
         Stream to play.
 
-        Use "best" or "worst" for selecting the highest or lowest available
+        Use ``best`` or ``worst`` for selecting the highest or lowest available
         quality.
 
         Fallback streams can be specified by using a comma-separated list:
@@ -667,13 +611,17 @@ def build_parser():
         metavar="STREAMS",
         type=comma_list,
         help="""
-        Fine tune best/worst synonyms by excluding unwanted streams.
+        Fine tune the ``best`` and ``worst`` stream name synonyms by excluding unwanted streams.
+
+        If all of the available streams get excluded, ``best`` and ``worst`` will become
+        inaccessible and new special stream synonyms ``best-unfiltered`` and ``worst-unfiltered``
+        can be used as a fallback selection method.
 
         Uses a filter expression in the format:
 
           [operator]<value>
 
-        Valid operators are >, >=, < and <=. If no operator is specified then
+        Valid operators are ``>``, ``>=``, ``<`` and ``<=``. If no operator is specified then
         equality is tested.
 
         For example this will exclude streams ranked higher than "480p":
@@ -815,6 +763,19 @@ def build_parser():
         """
     )
     transport.add_argument(
+        "--hls-segment-key-uri",
+        metavar="URI",
+        type=str,
+        help="""
+        URI to segment encryption key. If no URI is specified, the URI contained
+        in the segments will be used.
+
+        Example: --hls-segment-key-uri "https://example.com/hls/encryption_key"
+
+        Default is None.
+        """
+    )
+    transport.add_argument(
         "--hls-audio-select",
         type=comma_list,
         metavar="CODE",
@@ -845,7 +806,7 @@ def build_parser():
     transport.add_argument(
         "--hls-start-offset",
         type=hours_minutes_seconds,
-        metavar="HH:MM:SS",
+        metavar="[HH:]MM:SS",
         default=None,
         help="""
         Amount of time to skip from the beginning of the stream. For live
@@ -856,7 +817,7 @@ def build_parser():
     transport.add_argument(
         "--hls-duration",
         type=hours_minutes_seconds,
-        metavar="HH:MM:SS",
+        metavar="[HH:]MM:SS",
         default=None,
         help="""
         Limit the playback duration, useful for watching segments of a stream.
@@ -915,7 +876,7 @@ def build_parser():
         """
     )
     transport.add_argument(
-        "--rtmp-rtmpdump", "--rtmpdump", "-r",
+        "--rtmp-rtmpdump", "--rtmpdump",
         metavar="FILENAME",
         help="""
         RTMPDump is used to access RTMP streams. You can specify the
