@@ -13,10 +13,10 @@ matrix:
 
 before_install:
   - pip install --upgrade pip setuptools
-  - pip install -r requirements-dev.txt
+  - pip install --upgrade -r requirements-dev.txt
   - if [[ $BUILD_DOCS == 'yes' ]]; then
-      pip install -r requirements-docs.txt;
-      pip install doctr;
+      pip install --upgrade -r requirements-docs.txt;
+      pip install --upgrade doctr;
     fi
   # only Tested with this streamlink version
   - pip install -U git+https://github.com/streamlink/streamlink.git@33f677b6fe43582d1789884253ccde96705376eb
