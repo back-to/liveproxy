@@ -52,7 +52,7 @@ setup(
         ],
     },
     install_requires=[
-        'streamlink>=0.14.0, <1',
+        'streamlink>=1.0.0',
     ],
     python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, <4',
     classifiers=[
