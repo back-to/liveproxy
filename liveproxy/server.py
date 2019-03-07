@@ -519,17 +519,13 @@ def main_play(HTTPBase, arglist, redirect=False):
                     HTTPBase._headers(404, 'text/html', connection='close')
                 return
 
+        else:
             err = ('The specified stream(s) \'{0}\' could not be '
                    'found'.format(', '.join(args.stream)))
 
             log.error('{0}.\n       Available streams: {1}',
                       err, validstreams)
             HTTPBase._headers(404, 'text/html', connection='close')
-            return
-
-        else:
-            HTTPBase._headers(404, 'text/html', connection='close')
-            log.error('No URL provided.')
             return
 
 
