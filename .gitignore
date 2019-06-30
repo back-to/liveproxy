@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.vscode/
+
+*.m3u
+*.m3u8
+*.new
