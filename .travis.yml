@@ -3,8 +3,6 @@ language: python
 matrix:
   include:
   - python: '2.7'
-  - python: '3.4'
-  - python: '3.5'
   - python: '3.6'
     env: BUILD_DOCS=yes
   - python: '3.7'
@@ -19,7 +17,7 @@ before_install:
       pip install --upgrade doctr;
     fi
   # only Tested with this streamlink version
-  - pip install -U git+https://github.com/streamlink/streamlink.git@33f677b6fe43582d1789884253ccde96705376eb
+  - pip install -U git+https://github.com/streamlink/streamlink.git@209e43186b6bcf34c58f06019e8491f7ee2587d7
 
 install:
   - pip install -e .
