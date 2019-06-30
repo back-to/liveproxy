@@ -43,6 +43,8 @@ try:
 except ImportError:
     pass
 
+FILE_OUTPUT_LIST = ['.m3u', '.m3u8', '.new', '.txt']
+
 __all__ = [
     'CONFIG_FILES',
     'DEFAULT_PLAYER_ARGUMENTS',
@@ -53,4 +55,5 @@ __all__ = [
     'STREAM_SYNONYMS',
     'STREAMLINK_VERSION',
     'SUPPORTED_PLAYERS',
+    'FILE_OUTPUT_LIST',
 ]

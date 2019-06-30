@@ -13,6 +13,7 @@ from requests import __version__ as requests_version
 from streamlink import __version__ as streamlink_version
 
 from .argparser import parser
+from .constants import FILE_OUTPUT_LIST
 from .shared import (
     check_root,
     setup_logging,
@@ -78,7 +79,7 @@ def main():
             return
 
         new_lines = []
-        log.info('open old file')
+        log.info('open old file: {0}'.format(args.file))
         with codecs.open(args.file, 'r', 'utf-8') as temp:
             text = temp.read()
             for line in text.splitlines():
@@ -90,8 +91,21 @@ def main():
                     )
                 new_lines.append(line)
 
-        log.info('open new file')
-        with codecs.open(args.file + '.new', 'w', 'utf-8') as new_temp:
+        if args.file_output:
+            new_file = args.file_output
+        else:
+            new_file = args.file + '.new'
+
+        if args.file == new_file:
+            log.warning('Don\'t use the same name for the old and the new file.')
+            return
+
+        if not new_file.endswith(tuple(FILE_OUTPUT_LIST)):
+            log.error('Invalid file type: {0}'.format(new_file))
+            return
+
+        log.info('open new file: {0}'.format(new_file))
+        with codecs.open(new_file, 'w', 'utf-8') as new_temp:
             for line in new_lines:
                 new_temp.write(line + '\n')
 

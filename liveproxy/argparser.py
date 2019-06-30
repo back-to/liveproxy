@@ -5,6 +5,7 @@ from textwrap import dedent
 
 from liveproxy import __version__ as liveproxy_version
 
+from .constants import FILE_OUTPUT_LIST
 from .mirror_argparser import (
     ArgumentParser,
     HelpFormatter,
@@ -20,6 +21,13 @@ def ip_address(value):
         raise ValueError
 
     return match.group(0)
+
+
+def file_output_list(value):
+    if not value.endswith(tuple(FILE_OUTPUT_LIST)):
+        raise ValueError
+
+    return value
 
 
 parser = ArgumentParser(
@@ -91,7 +99,19 @@ url.add_argument(
 
     It will only encode lines that starts with `streamlink`,
     other lines will be ignored.
+
+    You can use `--file-output` to specify the new file.
     '''
+)
+url.add_argument(
+    '--file-output',
+    metavar='FILE',
+    type=file_output_list,
+    help='''
+    Use a custom output file for `--file` instead of a '.new' file.
+
+    Valid files are: {0}
+    '''.format(' '.join(FILE_OUTPUT_LIST))
 )
 url.add_argument(
     '--format',

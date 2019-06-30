@@ -96,6 +96,12 @@ Base64
       #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
       http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 
+  You can also use ``--file-output`` for a specified new file,
+  but be careful don't overwrite any important files.
+
+  ::
+
+      liveproxy --file example.m3u --file-output my_file.m3u
 
 Configuration file
 ------------------
