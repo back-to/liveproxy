@@ -1,5 +1,23 @@
 # Changelog
 
+## unreleased
+
+### Added
+
+- New command `--file-output`
+
+### Changed
+
+- requiere Streamlink version 1.1.1
+- Dropped support for Python 3.4
+
+## 0.2.0
+
+### Changed
+
+- requiere Streamlink version 1.0.0
+- fix if the stream quality name is invalid
+
 ## 0.1.1
 
 ### Changed

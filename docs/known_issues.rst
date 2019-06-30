@@ -25,7 +25,7 @@ currently a bit broken
 FFmpeg and RTMP
 ^^^^^^^^^^^^^^^
 
-FFmpeg and RTMP streams might not work on every platform,
-they work on Linux, but not on Windows for me.
+If you want to use FFmpeg or RTMP Streams,
+you will need a compiled version of FFmpeg or RTMPdump for your system.
 
 Don't use them if it doesn't work for you.

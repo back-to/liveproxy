@@ -54,12 +54,12 @@ To install LiveProxy from source you will need these dependencies.
 ==================================== ===========================================
 Name                                 Notes
 ==================================== ===========================================
-`Python`_                            At least version **2.7** or **3.4**.
+`Python`_                            At least version **2.7** or **3.6**.
 `python-setuptools`_
 
 **Automatically installed by the setup script**
 --------------------------------------------------------------------------------
-`python-streamlink`_                 At least version **0.14.0**.
+`python-streamlink`_                 At least version **1.1.1**.
 ==================================== ===========================================
 
 .. _Python: https://www.python.org/
