@@ -31,7 +31,7 @@ from streamlink.stream.ffmpegmux import MuxedStream
 
 from .compat import BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn
 from .constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
-from .mirror_argparser import build_parser
+from streamlink_cli.argparser import build_parser
 from .shared import logger
 
 ACCEPTABLE_ERRNO = (

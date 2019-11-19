@@ -6,7 +6,7 @@ from textwrap import dedent
 from liveproxy import __version__ as liveproxy_version
 
 from .constants import FILE_OUTPUT_LIST
-from .mirror_argparser import (
+from streamlink_cli.argparser import (
     ArgumentParser,
     HelpFormatter,
     num,

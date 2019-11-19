@@ -1,20 +1,6 @@
 import os
 
-from streamlink import __version__ as STREAMLINK_VERSION
 from streamlink.compat import is_win32
-
-DEFAULT_PLAYER_ARGUMENTS = u"{filename}"
-DEFAULT_STREAM_METADATA = {
-    "title": u"Unknown Title",
-    "author": u"Unknown Author",
-    "category": u"No Category",
-    "game": u"No Game/Category"
-}
-SUPPORTED_PLAYERS = {
-    "vlc": ["vlc", "vlc.exe"],
-    "mpv": ["mpv", "mpv.exe"]
-}
-LIVESTREAMER_VERSION = STREAMLINK_VERSION
 
 if is_win32:
     APPDATA = os.environ['APPDATA']
@@ -47,13 +33,8 @@ FILE_OUTPUT_LIST = ['.m3u', '.m3u8', '.new', '.txt']
 
 __all__ = [
     'CONFIG_FILES',
-    'DEFAULT_PLAYER_ARGUMENTS',
-    'DEFAULT_STREAM_METADATA',
-    'LIVESTREAMER_VERSION',
     'PLUGINS_DIR',
     'STREAM_PASSTHROUGH',
     'STREAM_SYNONYMS',
-    'STREAMLINK_VERSION',
-    'SUPPORTED_PLAYERS',
     'FILE_OUTPUT_LIST',
 ]

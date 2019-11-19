@@ -10,6 +10,7 @@
 
 - requiere Streamlink version 1.1.1
 - Dropped support for Python 3.4
+- Removed streamlink_cli mirror files.
 
 ## 0.2.0
 
