@@ -59,7 +59,7 @@ Name                                 Notes
 
 **Automatically installed by the setup script**
 --------------------------------------------------------------------------------
-`python-streamlink`_                 At least version **1.1.1**.
+`python-streamlink`_                 At least version **1.2.0**.
 ==================================== ===========================================
 
 .. _Python: https://www.python.org/
@@ -95,12 +95,7 @@ Enigma2
   The E2 version will run the command ``liveproxy --host 0.0.0.0`` |br|
   which can be used for local testing without the receiver.
 
-  The source and build files can be found at https://github.com/back-to/ipk
-
-  .. attention::
-
-    This is only tested with a **Vu+ Duo2** |br|
-    which is an E2 receiver with *init.d* and *python2.7*
+  The build files can be found at https://github.com/back-to/ipk
 
 opkg files
 ^^^^^^^^^^
@@ -109,18 +104,12 @@ opkg files
 
   .. code-block:: bash
 
+    opkg install python-pkgutil
     opkg install python-futures
     opkg install python-singledispatch
     opkg install python-six
     opkg install python-requests
-
-  .. note::
-
-    **python-pycrypto** was preinstalled on my test receiver,
-    you might need to install it on your.
-    |br| |br|
-    If this is not posible you can try
-    **python-pycryptodome** or **python-pycryptodomex**
+    opkg install python-pycrypto
 
 download files
 ^^^^^^^^^^^^^^
@@ -136,13 +125,13 @@ download files
 
   - \ |PATH|\ python-backports.shutil-get-terminal-size_1.0.0_all.ipk
   - \ |PATH|\ python-backports.shutil-which_3.5.1_all.ipk
-  - \ |PATH|\ python-iso3166_0.8_all.ipk
+  - \ |PATH|\ python-iso3166_1.0_all.ipk
   - \ |PATH|\ python-iso639_0.4.5_all.ipk
   - \ |PATH|\ python-isodate_0.6.0_all.ipk
-  - \ |PATH|\ python-socks_1.6.8_all.ipk
+  - \ |PATH|\ python-socks_1.7.1_all.ipk
   - \ |PATH|\ python-websocket_0.47.0_all.ipk
-  - \ |PATH|\ python-streamlink_0.14.2.138_all.ipk
-  - \ |PATH|\ python-liveproxy_0.1.1_all.ipk
+  - \ |PATH|\ python-streamlink_1.2.0.50_all.ipk
+  - \ |PATH|\ python-liveproxy_0.3.0_all.ipk
 
 install
 ^^^^^^^
@@ -160,7 +149,7 @@ install
     *opkg install /tmp/py* |br|
     **TAB** will be *opkg install /tmp/python-* |br| |br|
     *opkg install /tmp/python-so* |br|
-    **TAB** will be *opkg install /tmp/python-socks_1.6.8_all.ipk*
+    **TAB** will be *opkg install /tmp/python-socks_1.7.1_all.ipk*
 
 after install
 ^^^^^^^^^^^^^
