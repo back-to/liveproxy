@@ -87,7 +87,7 @@ def main():
                     line = URL_TEMPLATE.format(
                         host=HOST,
                         port=PORT,
-                        base64=base64.b64encode(line.encode('utf-8')).decode('utf-8'),
+                        base64=base64.urlsafe_b64encode(line.encode('utf-8')).decode('utf-8'),
                     )
                 new_lines.append(line)
 

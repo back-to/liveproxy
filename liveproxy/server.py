@@ -570,8 +570,10 @@ class HTTPRequest(BaseHTTPRequestHandler):
             main_play(self, arglist, redirect=True)
         elif self.path.startswith(('/base64/')):
             # http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
-            base64_path = urlparse(self.path).path.split('/')
-            arglist = shlex.split(base64.b64decode(base64_path[2]).decode('UTF-8'))
+            base64_path = self.path[8:]
+            if base64_path.endswith('/'):
+                base64_path = base64_path[:-1]
+            arglist = shlex.split(base64.urlsafe_b64decode(base64_path).decode('UTF-8'))
             if arglist[0].lower() == 'streamlink':
                 arglist = arglist[1:]
             main_play(self, arglist)
