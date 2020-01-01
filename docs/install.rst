@@ -77,15 +77,6 @@ Kodi
 
   .. Note:: A Kodi restart is recommended.
 
-  .. Attention::
-
-      **script.module.pycryptodome** is required for LiveProxy, |br|
-      but it's only prepacked on **Kodi Leia**.
-
-      If you want to use this Addon on **Krypton**, |br|
-      you will have to install **pycryptodome** on your system |br|
-      and create a *dummy* **script.module.pycryptodome** Addon.
-
 .. _repository.back-to: https://github.com/back-to/repo/raw/master/repository.back-to/repository.back-to-5.0.0.zip
 
 
@@ -187,7 +178,7 @@ service
 
     ::
 
-      update-rc.d /etc/init.d/liveproxy-server defaults
+      update-rc.d liveproxy-server defaults
 
 Known issues
 ^^^^^^^^^^^^
@@ -209,4 +200,4 @@ SystemTimeWarning
 
   ::
 
-    update-rc.d /etc/init.d/ntpupdate.sh defaults
+    update-rc.d ntpupdate.sh defaults
