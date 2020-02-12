@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.0
+
+- Fixed bug - base64 TypeError: Incorrect padding
+  see https://github.com/back-to/liveproxy/commit/3dbcc8550b8aa108a5d84fff2f96b722feb9ab2a
+- Fixed Kodi Python3 encoding bug
+
 ## 0.3.0
 
 ### Added
