@@ -1,4 +1,4 @@
-# LiveProxy 0.3.0
+# LiveProxy 1.0.0
 
 [![Build Status](https://travis-ci.org/back-to/liveproxy.svg?branch=master)](https://travis-ci.org/back-to/liveproxy)
 
