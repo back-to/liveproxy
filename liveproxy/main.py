@@ -57,7 +57,7 @@ def main():
     check_root()
     log_current_versions()
 
-    HOST = args.host
+    HOST = str(args.host)
     PORT = int(args.port)
 
     if args.help:
@@ -119,7 +119,7 @@ def main():
             if err.errno == errno.EADDRINUSE:
                 log.error('Could not listen on port {0}! Exiting...'.format(PORT))
                 sys.exit(errno.EADDRINUSE)
-            log.error('Error {0}! Exiting...'.format(err.errno))
+            log.error('Error {0}! Exiting...'.format(err))
             sys.exit(err.errno)
         try:
             httpd.serve_forever()

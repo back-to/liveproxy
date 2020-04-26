@@ -596,6 +596,7 @@ class Server(HTTPServer):
 
 class ThreadedHTTPServer(ThreadingMixIn, Server):
     '''Handle requests in a separate thread.'''
+    address_family = socket.AF_INET6
     allow_reuse_address = True
     daemon_threads = True
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import re
 
+from ipaddress import ip_address
 from textwrap import dedent
 
 from liveproxy import __version__ as liveproxy_version
@@ -11,17 +12,6 @@ from streamlink_cli.argparser import (
     HelpFormatter,
     num,
 )
-
-_ip_address_re = re.compile(r'^((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])$')
-
-
-def ip_address(value):
-    match = _ip_address_re.match(value)
-    if not match:
-        raise ValueError
-
-    return match.group(0)
-
 
 def file_output_list(value):
     if not value.endswith(tuple(FILE_OUTPUT_LIST)):
@@ -66,13 +56,13 @@ server.add_argument(
     '--host',
     metavar='HOST',
     type=ip_address,
-    default='127.0.0.1',
+    default='localhost',
     help='''
     A fixed IP to use as a HOST.
 
     Can also be used for `--file`
 
-    Default is 127.0.0.1.
+    Default is localhost
     '''
 )
 server.add_argument(
