@@ -152,8 +152,7 @@ def load_plugins(session, dirs):
         if os.path.isdir(directory):
             session.load_plugins(directory)
         else:
-            log.info('Plugin path {0} does not exist or is not '
-                     'a directory!', directory)
+            log.info('Plugin path {0} does not exist or is not a directory!'.format(directory))
 
 
 def setup_config_args(session, args, parser, arglist):
@@ -353,8 +352,7 @@ def setup_plugin_options(session, args, plugin):
                     for rparg in plugin.arguments.requires(parg.name):
                         required[rparg.name] = rparg
                 except RuntimeError:
-                    log.error('{0} plugin has a configuration error and the arguments '
-                              'cannot be parsed'.format(pname))
+                    log.error('{0} plugin has a configuration error and the arguments cannot be parsed'.format(pname))
                     break
     if required:
         for req in required.values():
@@ -391,8 +389,7 @@ def main_play(HTTPBase, arglist, redirect=False):
         try:
             plugin = session.resolve_url(args.url)
             setup_plugin_options(session, args, plugin)
-            log.info('Found matching plugin {0} for URL {1}',
-                     plugin.module, args.url)
+            log.info('Found matching plugin {0} for URL {1}'.format(plugin.module, args.url))
 
             plugin_args = []
             for parg in plugin.arguments:
@@ -417,11 +414,11 @@ def main_play(HTTPBase, arglist, redirect=False):
                     stream_types=args.stream_types,
                     sorting_excludes=args.stream_sorting_excludes)
         except FatalPluginError as err:
-            log.error('FatalPluginError {0}', str(err))
+            log.error('FatalPluginError {0}'.format(str(err)))
             HTTPBase._headers(404, 'text/html', connection='close')
             return
         except NoPluginError:
-            log.error('No plugin can handle URL: {0}', args.url)
+            log.error('No plugin can handle URL: {0}'.format(args.url))
             HTTPBase._headers(404, 'text/html', connection='close')
             return
         except PluginError as err:
@@ -430,7 +427,7 @@ def main_play(HTTPBase, arglist, redirect=False):
             return
 
         if not streams:
-            log.error('No playable streams found on this URL: {0}', args.url)
+            log.error('No playable streams found on this URL: {0}'.format(args.url))
             HTTPBase._headers(404, 'text/html', connection='close')
             return
 
@@ -444,7 +441,7 @@ def main_play(HTTPBase, arglist, redirect=False):
         validstreams = format_valid_streams(plugin, streams)
         for stream_name in args.stream:
             if stream_name in streams:
-                log.info('Available streams: {0}', validstreams)
+                log.info('Available streams: {0}'.format(validstreams))
 
                 '''Decides what to do with the selected stream.'''
 
@@ -460,15 +457,12 @@ def main_play(HTTPBase, arglist, redirect=False):
                     stream = streams[stream_name]
                     stream_type = type(stream).shortname()
 
-                    log.info('Opening stream: {0} ({1})', stream_name,
-                             stream_type)
+                    log.info('Opening stream: {0} ({1})'.format(stream_name, stream_type))
 
                     if isinstance(stream, (RTMPStream)):
-                        log.info('RTMP streams '
-                                 'might not work on every platform.')
+                        log.info('RTMP streams might not work on every platform.')
                     elif isinstance(stream, (MuxedStream, DASHStream)):
-                        log.info('FFmpeg streams (dash, muxed) '
-                                 'might not work on every platform.')
+                        log.info('FFmpeg streams (dash, muxed) might not work on every platform.')
 
                     # 301
                     if redirect is True:
@@ -520,11 +514,8 @@ def main_play(HTTPBase, arglist, redirect=False):
                 return
 
         else:
-            err = ('The specified stream(s) \'{0}\' could not be '
-                   'found'.format(', '.join(args.stream)))
-
-            log.error('{0}.\n       Available streams: {1}',
-                      err, validstreams)
+            err = ('The specified stream(s) \'{0}\' could not be found'.format(', '.join(args.stream)))
+            log.error('{0}.\n       Available streams: {1}'.format(err, validstreams))
             HTTPBase._headers(404, 'text/html', connection='close')
             return
 
