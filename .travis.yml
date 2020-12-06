@@ -17,7 +17,7 @@ before_install:
       pip install --upgrade doctr;
     fi
   # only Tested with this streamlink version
-  - pip install -U git+https://github.com/streamlink/streamlink.git@209e43186b6bcf34c58f06019e8491f7ee2587d7
+  - pip install -U git+https://github.com/streamlink/streamlink.git@54685731579b6c0c27f36e80e846701e811abc3f
 
 install:
   - pip install -e .
