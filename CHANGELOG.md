@@ -1,5 +1,11 @@
 # Changelog
 
+## unreleased
+
+### Changed
+
+- update source code for future Streamlink changes.
+
 ## 1.0.0
 
 - Fixed bug - base64 TypeError: Incorrect padding
