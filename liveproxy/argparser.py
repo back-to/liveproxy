@@ -1,16 +1,15 @@
 # -*- coding: utf-8 -*-
 import re
-
 from textwrap import dedent
 
-from liveproxy import __version__ as liveproxy_version
-
-from .constants import FILE_OUTPUT_LIST
 from streamlink_cli.argparser import (
     ArgumentParser,
     HelpFormatter,
     num,
 )
+
+from liveproxy import __version__ as liveproxy_version
+from liveproxy.constants import FILE_OUTPUT_LIST
 
 _ip_address_re = re.compile(r'^((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])$')
 

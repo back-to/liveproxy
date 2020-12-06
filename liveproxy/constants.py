@@ -1,6 +1,6 @@
 import os
 
-from streamlink.compat import is_py2, is_win32
+from liveproxy.compat import is_py2, is_win32
 
 if is_win32:
     APPDATA = os.environ['APPDATA']

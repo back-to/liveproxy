@@ -6,18 +6,11 @@ import logging
 import os
 import shlex
 import socket
-
 from collections import OrderedDict
 from contextlib import contextmanager
 from gettext import gettext
 
-from streamlink import plugins, Streamlink
-from streamlink.compat import (
-    is_py2,
-    parse_qsl,
-    unquote,
-    urlparse,
-)
+from streamlink import Streamlink, plugins
 from streamlink.exceptions import (
     FatalPluginError,
     NoPluginError,
@@ -28,11 +21,14 @@ from streamlink.plugin import PluginOptions
 from streamlink.stream import RTMPStream
 from streamlink.stream.dash import DASHStream
 from streamlink.stream.ffmpegmux import MuxedStream
-
-from .compat import BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn
-from .constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
 from streamlink_cli.argparser import build_parser
-from .shared import logger
+
+from liveproxy.compat import (
+    BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn,
+    is_py2, parse_qsl, unquote, urlparse
+)
+from liveproxy.constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
+from liveproxy.shared import logger
 
 ACCEPTABLE_ERRNO = (
     errno.ECONNABORTED,

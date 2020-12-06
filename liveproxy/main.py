@@ -8,17 +8,14 @@ import os
 import platform
 import sys
 
-from liveproxy import __version__ as liveproxy_version
+import streamlink.logger as logger
 from requests import __version__ as requests_version
 from streamlink import __version__ as streamlink_version
 
-from .argparser import parser
-from .constants import FILE_OUTPUT_LIST
-from .shared import (
-    check_root,
-    setup_logging,
-)
-from .server import (
+from liveproxy import __version__ as liveproxy_version
+from liveproxy.argparser import parser
+from liveproxy.constants import FILE_OUTPUT_LIST
+from liveproxy.server import (
     HTTPRequest,
     ThreadedHTTPServer,
 )
