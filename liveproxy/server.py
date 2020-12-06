@@ -10,6 +10,7 @@ from collections import OrderedDict
 from contextlib import contextmanager
 from gettext import gettext
 
+import streamlink.logger as logger
 from streamlink import Streamlink, plugins
 from streamlink.exceptions import (
     FatalPluginError,
@@ -28,7 +29,6 @@ from liveproxy.compat import (
     is_py2, parse_qsl, unquote, urlparse
 )
 from liveproxy.constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
-from liveproxy.shared import logger
 
 ACCEPTABLE_ERRNO = (
     errno.ECONNABORTED,

@@ -44,6 +44,16 @@ def log_current_versions():
     log.debug('Requests:   {0}'.format(requests_version))
 
 
+def setup_logging(stream=sys.stdout, level="info"):
+    logger.basicConfig(
+        stream=stream,
+        level=level,
+        style="{",
+        format=("[{asctime}]" if level == "trace" else "") + "[{name}][{levelname}] {message}",
+        datefmt="%H:%M:%S" + (".%f" if level == "trace" else "")
+    )
+
+
 def main():
     error_code = 0
 
@@ -51,7 +61,10 @@ def main():
 
     setup_logging()
 
-    check_root()
+    if hasattr(os, 'getuid'):
+        if os.geteuid() == 0:
+            log.info('LiveProxy is running as root! Be careful!')
+
     log_current_versions()
 
     HOST = args.host
