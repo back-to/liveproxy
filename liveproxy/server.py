@@ -139,18 +139,6 @@ def setup_args(parser, arglist=[], config_files=[], ignore_unknown=True):
     return args
 
 
-def load_plugins(session, dirs):
-    '''Attempts to load plugins from a list of directories.'''
-
-    dirs = [os.path.expanduser(d) for d in dirs]
-
-    for directory in dirs:
-        if os.path.isdir(directory):
-            session.load_plugins(directory)
-        else:
-            log.info('Plugin path {0} does not exist or is not a directory!'.format(directory))
-
-
 def setup_config_args(session, args, parser, arglist):
     config_files = []
 
@@ -173,15 +161,87 @@ def setup_config_args(session, args, parser, arglist):
     return args
 
 
-def setup_plugins(session, args):
+def setup_plugin_options(session, args, plugin):
+    '''Sets Streamlink plugin options.'''
+    pname = plugin.module
+    required = OrderedDict({})
+    for parg in plugin.arguments:
+        if parg.options.get("help") == argparse.SUPPRESS:
+            continue
+
+        value = getattr(args, parg.dest if parg.is_global else parg.namespace_dest(pname))
+        session.set_plugin_option(pname, parg.dest, value)
+
+        if not parg.is_global:
+            if parg.required:
+                required[parg.name] = parg
+            # if the value is set, check to see if any of the required arguments are not set
+            if parg.required or value:
+                try:
+                    for rparg in plugin.arguments.requires(parg.name):
+                        required[rparg.name] = rparg
+                except RuntimeError:
+                    log.error('{0} plugin has a configuration error and the arguments cannot be parsed'.format(pname))
+                    break
+    if required:
+        for req in required.values():
+            if not session.get_plugin_option(pname, req.dest):
+                prompt = req.prompt or 'Enter {0} {1}'.format(pname, req.name)
+                session.set_plugin_option(pname, req.dest,
+                                          plugin.input_ask_password(prompt)
+                                          if req.sensitive else
+                                          plugin.input_ask(prompt))
+
+
+def main_play(HTTPBase, arglist, redirect=False):
+    parser = build_parser()
+    args = setup_args(parser, arglist, ignore_unknown=True)
+
+    # create a new session for every request
+    session = LiveProxyStreamlink()
+
+    log.info('User-Agent: {0}'.format(HTTPBase.headers.get('User-Agent', '???')))
+    log.info('Client: {0}'.format(HTTPBase.client_address))
+    log.info('Address: {0}'.format(HTTPBase.address_string()))
+
     '''Loads any additional plugins.'''
     if args.plugin_dirs:
         PLUGINS_DIR.extend(args.plugin_dirs)
+    dirs = [os.path.expanduser(d) for d in PLUGINS_DIR]
+    for directory in dirs:
+        if os.path.isdir(directory):
+            session.load_plugins(directory)
+        else:
+            log.info('Plugin path {0} does not exist or is not a directory!'.format(directory))
 
-    load_plugins(session, PLUGINS_DIR)
+    '''Sets Streamlink plugin options.'''
+    plugin_args = parser.add_argument_group('Plugin options')
+    for pname, plugin in session.plugins.items():
+        defaults = {}
+        for parg in plugin.arguments:
+            if not parg.is_global:
+                plugin_args.add_argument(parg.argument_name(pname), **parg.options)
+                defaults[parg.dest] = parg.default
+            else:
+                pargdest = parg.dest
+                for action in parser._actions:
+                    # find matching global argument
+                    if pargdest != action.dest:
+                        continue
+                    defaults[pargdest] = action.default
 
+                    # add plugin to global argument
+                    plugins = getattr(action, "plugins", [])
+                    plugins.append(pname)
+                    setattr(action, "plugins", plugins)
 
-def setup_http_session(session, args):
+        plugin.options = PluginOptions(defaults)
+
+    # call setup args again once the plugin specific args have been added
+    args = setup_args(parser, arglist, ignore_unknown=True)
+    args = setup_config_args(session, args, parser, arglist)
+    logger.root.setLevel(args.loglevel)
+
     '''Sets the global HTTP settings, such as proxy and headers.'''
     if args.http_proxy:
         session.set_option('http-proxy', args.http_proxy)
@@ -216,171 +276,100 @@ def setup_http_session(session, args):
     if args.http_timeout:
         session.set_option('http-timeout', args.http_timeout)
 
-    if args.http_cookies:
-        session.set_option('http-cookies', args.http_cookies)
-
-    if args.http_headers:
-        session.set_option('http-headers', args.http_headers)
-
-    if args.http_query_params:
-        session.set_option('http-query-params', args.http_query_params)
-
-
-def setup_options(session, args):
-    '''Sets streamlink options.'''
-    if args.hls_live_edge:
-        session.set_option('hls-live-edge', args.hls_live_edge)
-
-    if args.hls_segment_attempts:
-        session.set_option('hls-segment-attempts', args.hls_segment_attempts)
-
-    if args.hls_playlist_reload_attempts:
-        session.set_option('hls-playlist-reload-attempts', args.hls_playlist_reload_attempts)
-
-    if args.hls_segment_threads:
-        session.set_option('hls-segment-threads', args.hls_segment_threads)
-
-    if args.hls_segment_timeout:
-        session.set_option('hls-segment-timeout', args.hls_segment_timeout)
-
-    if args.hls_segment_ignore_names:
-        session.set_option('hls-segment-ignore-names', args.hls_segment_ignore_names)
-
-    if args.hls_timeout:
-        session.set_option('hls-timeout', args.hls_timeout)
-
-    if args.hls_audio_select:
-        session.set_option('hls-audio-select', args.hls_audio_select)
-
-    if args.hls_start_offset:
-        session.set_option('hls-start-offset', args.hls_start_offset)
-
-    if args.hls_duration:
-        session.set_option('hls-duration', args.hls_duration)
-
-    if args.hls_live_restart:
-        session.set_option('hls-live-restart', args.hls_live_restart)
-
-    if args.hds_live_edge:
-        session.set_option('hds-live-edge', args.hds_live_edge)
-
-    if args.hds_segment_attempts:
-        session.set_option('hds-segment-attempts', args.hds_segment_attempts)
-
-    if args.hds_segment_threads:
-        session.set_option('hds-segment-threads', args.hds_segment_threads)
-
-    if args.hds_segment_timeout:
-        session.set_option('hds-segment-timeout', args.hds_segment_timeout)
-
-    if args.hds_timeout:
-        session.set_option('hds-timeout', args.hds_timeout)
-
-    if args.http_stream_timeout:
-        session.set_option('http-stream-timeout', args.http_stream_timeout)
-
-    if args.ringbuffer_size:
-        session.set_option('ringbuffer-size', args.ringbuffer_size)
-
-    if args.rtmp_proxy:
-        session.set_option('rtmp-proxy', args.rtmp_proxy)
-
-    if args.rtmp_rtmpdump:
-        session.set_option('rtmp-rtmpdump', args.rtmp_rtmpdump)
-
-    if args.rtmp_timeout:
-        session.set_option('rtmp-timeout', args.rtmp_timeout)
-
-    if args.stream_segment_attempts:
-        session.set_option('stream-segment-attempts', args.stream_segment_attempts)
-
-    if args.stream_segment_threads:
-        session.set_option('stream-segment-threads', args.stream_segment_threads)
-
-    if args.stream_segment_timeout:
-        session.set_option('stream-segment-timeout', args.stream_segment_timeout)
-
-    if args.stream_timeout:
-        session.set_option('stream-timeout', args.stream_timeout)
-
-    if args.ffmpeg_ffmpeg:
-        session.set_option('ffmpeg-ffmpeg', args.ffmpeg_ffmpeg)
-    if args.ffmpeg_verbose:
-        session.set_option('ffmpeg-verbose', args.ffmpeg_verbose)
-    if args.ffmpeg_verbose_path:
-        session.set_option('ffmpeg-verbose-path', args.ffmpeg_verbose_path)
-    if args.ffmpeg_video_transcode:
-        session.set_option('ffmpeg-video-transcode', args.ffmpeg_video_transcode)
-    if args.ffmpeg_audio_transcode:
-        session.set_option('ffmpeg-audio-transcode', args.ffmpeg_audio_transcode)
-
-    session.set_option('subprocess-errorlog', args.subprocess_errorlog)
-    session.set_option('subprocess-errorlog-path', args.subprocess_errorlog_path)
-    session.set_option('locale', args.locale)
-
-
-def setup_plugin_args(session, parser):
-    '''Sets Streamlink plugin options.'''
-
-    plugin_args = parser.add_argument_group('Plugin options')
-    for pname, plugin in session.plugins.items():
-        defaults = {}
-        for parg in plugin.arguments:
-            plugin_args.add_argument(parg.argument_name(pname), **parg.options)
-            defaults[parg.dest] = parg.default
-
-        plugin.options = PluginOptions(defaults)
-
-
-def setup_plugin_options(session, args, plugin):
-    '''Sets Streamlink plugin options.'''
-    pname = plugin.module
-    required = OrderedDict({})
-    for parg in plugin.arguments:
-        if parg.options.get('help') != argparse.SUPPRESS:
-            if parg.required:
-                required[parg.name] = parg
-            value = getattr(args, parg.namespace_dest(pname))
-            session.set_plugin_option(pname, parg.dest, value)
-            # if the value is set, check to see if any of the required arguments are not set
-            if parg.required or value:
-                try:
-                    for rparg in plugin.arguments.requires(parg.name):
-                        required[rparg.name] = rparg
-                except RuntimeError:
-                    log.error('{0} plugin has a configuration error and the arguments cannot be parsed'.format(pname))
-                    break
-    if required:
-        for req in required.values():
-            if not session.get_plugin_option(pname, req.dest):
-                prompt = req.prompt or 'Enter {0} {1}'.format(pname, req.name)
-                session.set_plugin_option(pname, req.dest,
-                                          plugin.input_ask_password(prompt)
-                                          if req.sensitive else
-                                          plugin.input_ask(prompt))
-
-
-def main_play(HTTPBase, arglist, redirect=False):
-    parser = build_parser()
-    args = setup_args(parser, arglist, ignore_unknown=True)
-
-    # create a new session for every request
-    session = LiveProxyStreamlink()
-
-    log.info('User-Agent: {0}'.format(HTTPBase.headers.get('User-Agent', '???')))
-    log.info('Client: {0}'.format(HTTPBase.client_address))
-    log.info('Address: {0}'.format(HTTPBase.address_string()))
-
-    setup_plugins(session, args)
-    setup_plugin_args(session, parser)
-    # call setup args again once the plugin specific args have been added
-    args = setup_args(parser, arglist, ignore_unknown=True)
-    args = setup_config_args(session, args, parser, arglist)
-    logger.root.setLevel(args.loglevel)
-    setup_http_session(session, args)
-
     if args.url:
-        setup_options(session, args)
+        '''Sets streamlink options.'''
+        if args.hls_live_edge:
+            session.set_option('hls-live-edge', args.hls_live_edge)
+
+        if args.hls_segment_attempts:
+            session.set_option('hls-segment-attempts', args.hls_segment_attempts)
+
+        if args.hls_playlist_reload_attempts:
+            session.set_option('hls-playlist-reload-attempts', args.hls_playlist_reload_attempts)
+
+        if args.hls_segment_threads:
+            session.set_option('hls-segment-threads', args.hls_segment_threads)
+
+        if args.hls_segment_timeout:
+            session.set_option('hls-segment-timeout', args.hls_segment_timeout)
+
+        if args.hls_segment_ignore_names:
+            session.set_option('hls-segment-ignore-names', args.hls_segment_ignore_names)
+
+        if args.hls_timeout:
+            session.set_option('hls-timeout', args.hls_timeout)
+
+        if args.hls_audio_select:
+            session.set_option('hls-audio-select', args.hls_audio_select)
+
+        if args.hls_start_offset:
+            session.set_option('hls-start-offset', args.hls_start_offset)
+
+        if args.hls_duration:
+            session.set_option('hls-duration', args.hls_duration)
+
+        if args.hls_live_restart:
+            session.set_option('hls-live-restart', args.hls_live_restart)
+
+        if args.hds_live_edge:
+            session.set_option('hds-live-edge', args.hds_live_edge)
+
+        if args.hds_segment_attempts:
+            session.set_option('hds-segment-attempts', args.hds_segment_attempts)
+
+        if args.hds_segment_threads:
+            session.set_option('hds-segment-threads', args.hds_segment_threads)
+
+        if args.hds_segment_timeout:
+            session.set_option('hds-segment-timeout', args.hds_segment_timeout)
+
+        if args.hds_timeout:
+            session.set_option('hds-timeout', args.hds_timeout)
+
+        if args.http_stream_timeout:
+            session.set_option('http-stream-timeout', args.http_stream_timeout)
+
+        if args.ringbuffer_size:
+            session.set_option('ringbuffer-size', args.ringbuffer_size)
+
+        if args.rtmp_proxy:
+            session.set_option('rtmp-proxy', args.rtmp_proxy)
+
+        if args.rtmp_rtmpdump:
+            session.set_option('rtmp-rtmpdump', args.rtmp_rtmpdump)
+
+        if args.rtmp_timeout:
+            session.set_option('rtmp-timeout', args.rtmp_timeout)
+
+        if args.stream_segment_attempts:
+            session.set_option('stream-segment-attempts', args.stream_segment_attempts)
+
+        if args.stream_segment_threads:
+            session.set_option('stream-segment-threads', args.stream_segment_threads)
+
+        if args.stream_segment_timeout:
+            session.set_option('stream-segment-timeout', args.stream_segment_timeout)
+
+        if args.stream_timeout:
+            session.set_option('stream-timeout', args.stream_timeout)
+
+        if args.ffmpeg_ffmpeg:
+            session.set_option('ffmpeg-ffmpeg', args.ffmpeg_ffmpeg)
+        if args.ffmpeg_verbose:
+            session.set_option('ffmpeg-verbose', args.ffmpeg_verbose)
+        if args.ffmpeg_verbose_path:
+            session.set_option('ffmpeg-verbose-path', args.ffmpeg_verbose_path)
+        if args.ffmpeg_video_transcode:
+            session.set_option('ffmpeg-video-transcode', args.ffmpeg_video_transcode)
+        if args.ffmpeg_audio_transcode:
+            session.set_option('ffmpeg-audio-transcode', args.ffmpeg_audio_transcode)
+
+        if args.mux_subtitles:
+            session.set_option("mux-subtitles", args.mux_subtitles)
+
+        session.set_option('subprocess-errorlog', args.subprocess_errorlog)
+        session.set_option('subprocess-errorlog-path', args.subprocess_errorlog_path)
+        session.set_option('locale', args.locale)
 
         try:
             plugin = session.resolve_url(args.url)
