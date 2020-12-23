@@ -31,7 +31,7 @@ long_description = read('README.md')
 setup(
     name='liveproxy',
     version=find_version('liveproxy', '__init__.py'),
-    description='LiveProxy is a local Proxyserver between Streamlink and an URL.',
+    description='LiveProxy can redirect Livestreams to your favorite player on a lot of devices.',
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='BSD 2-Clause "Simplified" License',
@@ -44,15 +44,8 @@ setup(
     author='back-to',
     author_email='backto@protonmail.ch',
     packages=['liveproxy'],
-    entry_points={
-        'console_scripts': [
-            'liveproxy=liveproxy.main:main'
-        ],
-    },
-    install_requires=[
-        'streamlink>=1.1.1',
-    ],
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4',
+    entry_points={'console_scripts': ['liveproxy=liveproxy.main:main']},
+    python_requires='>=3.6, <4',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -63,16 +56,15 @@ setup(
         'Operating System :: Microsoft :: Windows',
         'Operating System :: POSIX',
         'Operating System :: Unix',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: Implementation :: CPython',
-        'Programming Language :: Python :: Implementation :: PyPy',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Multimedia :: Sound/Audio',
         'Topic :: Multimedia :: Video',
         'Topic :: Utilities',
     ],
-    keywords='LiveProxy Streamlink Livecli Livestreamer IPTV TV',
+    keywords='LiveProxy Streamlink Livecli Livestreamer IPTV TV Youtube-DL',
 )

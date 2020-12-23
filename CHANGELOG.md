@@ -1,10 +1,23 @@
 # Changelog
 
-## unreleased
+## unreleased 2.0.0.dev0
+
+### Added
+
+- Youtube-DL can now be used as well.
 
 ### Changed
 
-- update source code for future Streamlink changes.
+- Streamlink must be used as a binary path, not a Python import.
+  Example: `streamlink` `streamlink.exe` `/usr/local/bin/streamlink`
+- Enigma2 and Kodi requires LiveProxy install on a different local device.
+  Example: `Raspberry Pi`
+
+### Removed
+
+- Python 2.7 support
+- Python 3.5 support
+- Streamlink dependency
 
 ## 1.0.0
 
