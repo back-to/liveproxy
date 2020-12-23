@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import base64
-import codecs
 import errno
 import logging
 import os
@@ -34,6 +32,7 @@ def log_current_versions():
     # linux / other
     else:
         os_version = platform.platform()
+from liveproxy.files import create_file
 
     log.info('For LiveProxy support visit https://github.com/back-to/liveproxy')
     log.debug('OS:         {0}'.format(os_version))
@@ -71,54 +70,11 @@ def main():
 
     if args.help:
         parser.print_help()
-    elif args.file:
-        if not os.path.isfile(args.file):
-            log.error('File does not exist: {0}'.format(args.file))
-            return
-        elif not os.access(args.file, os.F_OK):
-            log.error('Can\'t read file: {0}'.format(args.file))
-            return
 
-        if args.format == 'm3u':
-            URL_TEMPLATE = 'http://{host}:{port}/base64/{base64}/'
-            # %3a
-        elif args.format == 'e2':
-            URL_TEMPLATE = 'http%3a//{host}%3a{port}/base64/{base64}/'
-        else:
-            return
 
-        new_lines = []
-        log.info('open old file: {0}'.format(args.file))
-        with codecs.open(args.file, 'r', 'utf-8') as temp:
-            text = temp.read()
-            for line in text.splitlines():
-                if line.startswith('streamlink'):
-                    line = URL_TEMPLATE.format(
-                        host=HOST,
-                        port=PORT,
-                        base64=base64.urlsafe_b64encode(line.encode('utf-8')).decode('utf-8'),
-                    )
-                new_lines.append(line)
 
-        if args.file_output:
-            new_file = args.file_output
-        else:
-            new_file = args.file + '.new'
-
-        if args.file == new_file:
-            log.warning('Don\'t use the same name for the old and the new file.')
-            return
-
-        if not new_file.endswith(tuple(FILE_OUTPUT_LIST)):
-            log.error('Invalid file type: {0}'.format(new_file))
-            return
-
-        log.info('open new file: {0}'.format(new_file))
-        with codecs.open(new_file, 'w', 'utf-8') as new_temp:
-            for line in new_lines:
-                new_temp.write(line + '\n')
-
-        log.info('Done.')
+    if args.file:
+        create_file(args)
     else:
         log.info('Starting server: {0} on port {1}'.format(HOST, PORT))
 
