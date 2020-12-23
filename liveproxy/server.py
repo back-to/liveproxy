@@ -24,11 +24,9 @@ from streamlink.stream.dash import DASHStream
 from streamlink.stream.ffmpegmux import MuxedStream
 from streamlink_cli.argparser import build_parser
 
-from liveproxy.compat import (
-    BaseHTTPRequestHandler, HTTPServer, ThreadingMixIn,
-    is_py2, parse_qsl, unquote, urlparse
-)
-from liveproxy.constants import CONFIG_FILES, PLUGINS_DIR, STREAM_SYNONYMS
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from socketserver import ThreadingMixIn
+from urllib.parse import parse_qsl, unquote, urlparse
 
 ACCEPTABLE_ERRNO = (
     errno.ECONNABORTED,
@@ -576,7 +574,4 @@ class ThreadedHTTPServer(ThreadingMixIn, Server):
     daemon_threads = True
 
 
-__all__ = [
-    'HTTPRequest',
-    'ThreadedHTTPServer',
-]
+__all__ = ('HTTPRequest', 'ThreadedHTTPServer')

@@ -9,7 +9,6 @@ from streamlink_cli.argparser import (
 )
 
 from liveproxy import __version__ as liveproxy_version
-from liveproxy.constants import FILE_OUTPUT_LIST
 
 _ip_address_re = re.compile(r'^((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])$')
 
@@ -20,6 +19,7 @@ def ip_address(value):
         raise ValueError
 
     return match.group(0)
+FILE_OUTPUT_LIST = ['.m3u', '.m3u8', '.new', '.txt']
 
 
 def file_output_list(value):
