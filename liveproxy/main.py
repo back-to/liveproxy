@@ -12,10 +12,6 @@ from streamlink import __version__ as streamlink_version
 
 from liveproxy import __version__ as liveproxy_version
 from liveproxy.argparser import parser
-from liveproxy.server import (
-    HTTPRequest,
-    ThreadedHTTPServer,
-)
 
 log = logging.getLogger('streamlink.liveproxy-main')
 
@@ -33,6 +29,7 @@ def log_current_versions():
     else:
         os_version = platform.platform()
 from liveproxy.files import create_file
+from liveproxy.server import HTTPRequest, ThreadedHTTPServer
 
     log.info('For LiveProxy support visit https://github.com/back-to/liveproxy')
     log.debug('OS:         {0}'.format(os_version))
