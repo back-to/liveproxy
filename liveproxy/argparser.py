@@ -1,24 +1,8 @@
-# -*- coding: utf-8 -*-
-import re
+import argparse
 from textwrap import dedent
-
-from streamlink_cli.argparser import (
-    ArgumentParser,
-    HelpFormatter,
-    num,
-)
 
 from liveproxy import __version__ as liveproxy_version
 
-_ip_address_re = re.compile(r'^((\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])\.){3}(\d{1,2}|1\d{2}|2[0-4]\d|25[0-5])$')
-
-
-def ip_address(value):
-    match = _ip_address_re.match(value)
-    if not match:
-        raise ValueError
-
-    return match.group(0)
 FILE_OUTPUT_LIST = ['.m3u', '.m3u8', '.new', '.txt']
 
 
@@ -29,9 +13,29 @@ def file_output_list(value):
     return value
 
 
-parser = ArgumentParser(
+def num(type, min=None, max=None):
+    def func(value):
+        value = type(value)
+        if min is not None and not (value > min):
+            raise argparse.ArgumentTypeError(
+                '{0} value must be more than {1} but is {2}'.format(
+                    type.__name__, min, value
+                )
+            )
+        if max is not None and not (value <= max):
+            raise argparse.ArgumentTypeError(
+                '{0} value must be at most {1} but is {2}'.format(
+                    type.__name__, max, value
+                )
+            )
+        return value
+
+    func.__name__ = type.__name__
+    return func
+
+
+parser = argparse.ArgumentParser(
     fromfile_prefix_chars='@',
-    formatter_class=HelpFormatter,
     add_help=False,
     usage='%(prog)s --host [HOST] --port [PORT]',
     description=dedent('''
@@ -64,14 +68,14 @@ server = parser.add_argument_group('Server options')
 server.add_argument(
     '--host',
     metavar='HOST',
-    type=ip_address,
+    type=str,
     default='127.0.0.1',
     help='''
     A fixed IP to use as a HOST.
 
     Can also be used for `--file`
 
-    Default is 127.0.0.1.
+    Default is 127.0.0.1
     '''
 )
 server.add_argument(
@@ -84,7 +88,7 @@ server.add_argument(
 
     Can also be used for `--file`
 
-    Default is 53422.
+    Default is 53422
     '''
 )
 
