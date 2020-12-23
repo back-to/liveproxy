@@ -22,7 +22,7 @@ install:
 
 script:
   - liveproxy --version
-  - pytest --cov
+  # - pytest --cov
   - flake8 liveproxy/
   - if [[ $BUILD_DOCS == 'yes' ]]; then make --directory=docs html; fi
 
