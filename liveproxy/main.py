@@ -59,7 +59,10 @@ def main():
             if err.errno == errno.EADDRINUSE:
                 log.error(f'Could not listen on port {PORT}! Exiting...')
                 sys.exit(errno.EADDRINUSE)
-            log.error(f'Error {err.errno}! Exiting...')
+            elif err.errno == errno.EADDRNOTAVAIL:
+                log.error(f'Cannot assign requested address {HOST}')
+                sys.exit(err.errno)
+            log.error(f'Error {err}! Exiting...')
             sys.exit(err.errno)
         try:
             httpd.serve_forever()
