@@ -16,10 +16,6 @@ LiveProxy is a local Proxyserver between Streamlink and an URL.
 After installing and running LiveProxy you will be able to access Streamlink
 from any device in your local network via an URL.
 
-.. WARNING::
-    LiveProxy is not supposed to run on remote servers,
-    it is only meant for a local network.
-
 Now to get into actually using LiveProxy, let's say you want to watch the
 stream located on https://www.youtube.com/user/france24, you start off by
 starting LiveProxy in your terminal.
@@ -58,9 +54,6 @@ Base64
   ::
 
     http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
-
-  Redirect with `--player-passthrough` is currently not supported,
-  it will be added in a future update.
 
   LiveProxy can create this URL automatically.
 
