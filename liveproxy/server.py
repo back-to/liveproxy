@@ -63,7 +63,10 @@ class HTTPRequest(BaseHTTPRequestHandler):
     def do_GET(self):
         '''Respond to a GET request.'''
         random_id = hex(int(time()))[5:]
-        log = logging.getLogger(f'liveproxy.{random_id}.{__name__}')
+        log = logging.getLogger('{name}.{random_id}'.format(
+            name=__name__.replace('liveproxy.', ''),
+            random_id=random_id,
+        ))
 
         if self.path.startswith(('/play/', '/streamlink/', '/301/', '/streamlink_301/')):
             # http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst
