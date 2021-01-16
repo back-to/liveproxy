@@ -41,9 +41,8 @@ For this Examples ``53422`` is used as the **default port**.
 Base64
 ------
 
-  The LiveProxy URL build was simplified,
-  the `STREAMLINK-COMMANDS` part must be replaced with your Streamlink commands
-  after they got base64 encoded.
+Streamlink
+~~~~~~~~~~
 
   ::
 
@@ -55,9 +54,25 @@ Base64
 
     http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
 
+Youtube-DL
+~~~~~~~~~~
+
+  ::
+
+    http://127.0.0.1:53422/base64/YOUTUBE-DL-COMMANDS/
+
+  Example for `youtube-dl https://www.youtube.com/user/france24/live`
+
+  ::
+
+    http://127.0.0.1:53422/base64/eW91dHViZS1kbCBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmU=/
+
+LiveProxy-Command
+~~~~~~~~~~~~~~~~~
+
   LiveProxy can create this URL automatically.
 
-  Create a new file with your Streamlink commands.
+  Create a new file with your commands.
 
   ::
 
@@ -68,16 +83,17 @@ Base64
       streamlink https://www.youtube.com/user/france24 best
       #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
       streamlink https://www.euronews.com/live best
+      #EXTINF:-1,France24
+      youtube-dl https://www.youtube.com/user/france24/live
 
-  For this example the filename is `example.m3u`,
-  create a valid URL for LiveProxy.
+  For this example the filename is `example.m3u`
 
   ::
 
       liveproxy --file example.m3u
 
-  It will create a new file `example.m3u.new` with valid URLs,
-  only lines with `streamlink` at the start will be changed.
+  It will create a new file `example.m3u.new` with valid URLs,|br|
+  only lines with `streamlink`, `youtube-dl` or `youtube_dl` at the start will be changed.
 
   ::
 
@@ -88,54 +104,44 @@ Base64
       http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
       #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
       http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
+      #EXTINF:-1,France24
+      http://127.0.0.1:53422/base64/eW91dHViZS1kbCBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmU=/
 
-  You can also use ``--file-output`` for a specified new file,
+  You can also use ``--file-output`` for a specified new file,|br|
   but be careful don't overwrite any important files.
 
   ::
 
       liveproxy --file example.m3u --file-output my_file.m3u
 
-Configuration file
-------------------
-
-  LiveProxy is fully compatible with the way Streamlink uses configuration files
-
-  For more Details see `Streamlink-configuration-file`_
-
-  The following path can be used for Kodi
-
-  ::
-
-    special://profile/addon_data/service.liveproxy/config
-
-  .. Note:: strongly recommended for Usernames and Passwords
-
-.. _Streamlink-configuration-file: https://streamlink.github.io/cli.html#configuration-file
-
-
 Examples
 --------
 
 URL
-^^^
+~~~
 
   Here are some finished working examples.
 
-  **Euronews**
+  **Euronews** (Streamlink)
 
   ::
 
       http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 
-  **France24**
+  **France24** (Streamlink)
 
   ::
 
       http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
 
+  **France24** (Youtube-DL)
+
+  ::
+
+      http://127.0.0.1:53422/base64/eW91dHViZS1kbCBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmU=/
+
 M3U
-^^^
+~~~
 
   **Euronews**
 
