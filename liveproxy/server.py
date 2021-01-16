@@ -105,7 +105,7 @@ class HTTPRequest(BaseHTTPRequestHandler):
         self._headers(200, 'video/unknown')
         process = subprocess.Popen(arglist,
                                    stderr=subprocess.PIPE,
-                                   stdin=None,
+                                   stdin=subprocess.PIPE,
                                    stdout=subprocess.PIPE,
                                    shell=False,
                                    )
