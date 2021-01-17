@@ -1,10 +1,11 @@
 # Changelog
 
-## unreleased 2.0.0.dev0
+## unreleased 2.0.0.dev1
 
 ### Added
 
 - Youtube-DL can now be used as well.
+- New command --loglevel
 
 ### Changed
 
