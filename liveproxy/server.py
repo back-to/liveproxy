@@ -45,7 +45,6 @@ def arglist_from_query(path, prog='streamlink'):
 class HTTPRequest(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
-        # log.debug('%s - %s' % (self.address_string(), format % args))
         pass
 
     def _headers(self, status, content, connection=False):
@@ -68,6 +67,10 @@ class HTTPRequest(BaseHTTPRequestHandler):
             random_id=random_id,
         ))
 
+        log.info(f'User-Agent: {self.headers.get("User-Agent", "???")}')
+        log.info(f'Client: {self.client_address}')
+        log.info(f'Address: {self.address_string()}')
+
         if self.path.startswith(('/play/', '/streamlink/', '/301/', '/streamlink_301/')):
             # http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst
             arglist = arglist_from_query(self.path)
@@ -84,22 +87,19 @@ class HTTPRequest(BaseHTTPRequestHandler):
             self._headers(404, 'text/html', connection='close')
             return
 
-        log.info(f'User-Agent: {self.headers.get("User-Agent", "???")}')
-        log.info(f'Client: {self.client_address}')
-        log.info(f'Address: {self.address_string()}')
-
         prog = which(arglist[0], mode=os.F_OK | os.X_OK)
         if not prog:
             log.debug(f'invalid prog: {prog}')
             return
 
-        log.debug(f'prog: {prog}')
+        log.debug(f'Video-Software: {prog}')
         if _re_streamlink.search(prog):
             arglist.extend(['--stdout', '--loglevel', 'none'])
         elif _re_youtube_dl.search(prog):
             arglist.extend(['--o', '-', '--quiet', '--no-playlist', '--no-warnings', '--no-progress'])
         else:
-            log.error('currently unsupported programm')
+            log.error('Video-Software is not supported.')
+            self._headers(404, 'text/html', connection='close')
             return
 
         self._headers(200, 'video/unknown')
@@ -150,7 +150,7 @@ class Server(HTTPServer):
     timeout = 5
 
     def finish_request(self, request, client_address):
-        """Finish one request by instantiating RequestHandlerClass."""
+        '''Finish one request by instantiating RequestHandlerClass.'''
         try:
             self.RequestHandlerClass(request, client_address, self)
         except ValueError:
