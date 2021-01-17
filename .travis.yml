@@ -3,36 +3,20 @@ language: python
 matrix:
   include:
   - python: '3.6'
-    env: BUILD_DOCS=yes
   - python: '3.7'
   - python: '3.8'
   - python: '3.9'
 
 before_install:
   - pip install --upgrade pip setuptools
-  - pip install --upgrade -r requirements-dev.txt
-  - if [[ $BUILD_DOCS == 'yes' ]]; then
-      pip install --upgrade -r requirements-docs.txt;
-      pip install --upgrade doctr;
-    fi
-  - pip install -U git+https://github.com/streamlink/streamlink.git
+  - pip install --upgrade flake8 flake8-import-order
+  # - pip install --upgrade pytest
+  # - pip install --upgrade git+https://github.com/streamlink/streamlink.git
 
 install:
-  - pip install -e .
+  - pip install --upgrade -e .
 
 script:
   - liveproxy --version
-  # - pytest --cov
-  - flake8 liveproxy/
-  - if [[ $BUILD_DOCS == 'yes' ]]; then make --directory=docs html; fi
-
-after_success:
-  - set -e
-  # push docs for master
-  - if [[ $BUILD_DOCS == 'yes' && $TRAVIS_REPO_SLUG == 'back-to/liveproxy' ]]; then doctr deploy .; fi
-
-doctr:
-  build-tags: True
-  deploy-repo: liveproxy/liveproxy.github.io
-  key-path: deploy_key_doctr.enc
-  require-master: True
+  # - pytest
+  - flake8

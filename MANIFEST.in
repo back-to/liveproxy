@@ -2,11 +2,7 @@ include AUTHORS
 include CHANGELOG.md
 include README.md
 include LICENSE*
-include requirements-dev.txt
-include requirements-docs.txt
 
-recursive-include docs *
-prune docs/_build
 recursive-include tests *py
 
 prune */__pycache__

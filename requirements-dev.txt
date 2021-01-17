@@ -1,5 +1,0 @@
-pip>=9.0.1
-flake8
-flake8-import-order
-pytest
-pytest-cov
