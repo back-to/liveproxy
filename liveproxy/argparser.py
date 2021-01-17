@@ -63,6 +63,19 @@ general.add_argument(
     Show version number and exit.
     '''
 )
+general.add_argument(
+    '--loglevel',
+    metavar='LEVEL',
+    choices=('CRITICAL', 'ERROR', 'WARNING', 'INFO', 'DEBUG', 'NOTSET'),
+    default='INFO',
+    help='''
+    Set the log message threshold.
+
+    https://docs.python.org/3/library/logging.html#logging-levels
+
+    Valid levels are: CRITICAL, ERROR, WARNING, INFO, DEBUG, NOTSET
+    '''
+)
 
 server = parser.add_argument_group('Server options')
 server.add_argument(

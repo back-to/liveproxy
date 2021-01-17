@@ -22,7 +22,7 @@ def main():
 
     logging.basicConfig(
         stream=sys.stdout,
-        level='DEBUG',
+        level=args.loglevel,
         format='[%(name)s][%(levelname)s] %(message)s',
     )
 
