@@ -71,10 +71,10 @@ You will need to base64 encode your used commands.
 http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
 ```
 
-Example for `streamlink https://www.youtube.com/user/france24 best`
+Example for `streamlink https://www.youtube.com/user/france24/live best`
 
 ```text
-http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
+http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmUgYmVzdA==/
 ```
 
 #### Youtube-DL
@@ -100,7 +100,7 @@ Create a new file with your commands.
 #EXTINF:-1,Arte FR
 streamlink https://www.arte.tv/fr/direct/ 720p,720p_alt,best
 #EXTINF:-1,France24
-streamlink https://www.youtube.com/user/france24 best
+streamlink https://www.youtube.com/user/france24/live best
 #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
 streamlink https://www.euronews.com/live best
 #EXTINF:-1,France24
@@ -121,7 +121,7 @@ only lines with `streamlink`, `youtube-dl` or `youtube_dl` at the start will be 
 #EXTINF:-1,Arte FR
 http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5hcnRlLnR2L2ZyL2RpcmVjdC8gNzIwcCw3MjBwX2FsdCxiZXN0/
 #EXTINF:-1,France24
-http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0IGJlc3Q=/
+http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmUgYmVzdA==/
 #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
 http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
 #EXTINF:-1,France24
