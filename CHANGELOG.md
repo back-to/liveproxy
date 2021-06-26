@@ -1,6 +1,6 @@
 # Changelog
 
-## unreleased 2.0.0.dev1
+## 2.0.0
 
 ### Added
 
