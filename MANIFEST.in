@@ -1,7 +1,5 @@
-include AUTHORS
 include CHANGELOG.md
 include README.md
-include LICENSE*
 
 recursive-include tests *py
 
