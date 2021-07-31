@@ -1,5 +1,11 @@
 # Changelog
 
+## unreleased 2.1.0.dev0
+
+### Removed
+
+- Windows support
+
 ## 2.0.0
 
 ### Added

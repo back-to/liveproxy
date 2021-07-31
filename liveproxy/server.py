@@ -20,13 +20,9 @@ ACCEPTABLE_ERRNO = (
     errno.EINVAL,
     errno.EPIPE,
 )
-try:
-    ACCEPTABLE_ERRNO += (errno.WSAECONNABORTED,)
-except AttributeError:
-    pass  # Not windows
 
-_re_streamlink = re.compile(r'streamlink(?:\.exe)?$')
-_re_youtube_dl = re.compile(r'youtube[_-]dl(?:\.exe)?$')
+_re_streamlink = re.compile(r'streamlink$', re.IGNORECASE)
+_re_youtube_dl = re.compile(r'youtube[_-]dl$', re.IGNORECASE)
 
 log = logging.getLogger(__name__.replace('liveproxy.', ''))
 
