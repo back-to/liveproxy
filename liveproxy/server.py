@@ -92,12 +92,13 @@ class HTTPRequest(BaseHTTPRequestHandler):
         if _re_streamlink.search(prog):
             arglist.extend(['--stdout', '--loglevel', 'none'])
         elif _re_youtube_dl.search(prog):
-            arglist.extend(['--o', '-', '--quiet', '--no-playlist', '--no-warnings', '--no-progress'])
+            arglist.extend(['-o', '-', '--quiet', '--no-playlist', '--no-warnings', '--no-progress'])
         else:
             log.error('Video-Software is not supported.')
             self._headers(404, 'text/html', connection='close')
             return
 
+        log.debug(f'{arglist!r}')
         self._headers(200, 'video/unknown')
         process = subprocess.Popen(arglist,
                                    stderr=subprocess.PIPE,
