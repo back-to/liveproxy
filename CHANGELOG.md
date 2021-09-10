@@ -2,6 +2,10 @@
 
 ## unreleased 2.1.0.dev0
 
+### Added
+
+- YT-DLP can now also be used.
+
 ### Removed
 
 - Windows support
@@ -10,7 +14,7 @@
 
 ### Added
 
-- Youtube-DL can now be used as well.
+- Youtube-DL can now also be used.
 - New command --loglevel
 
 ### Changed

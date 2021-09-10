@@ -60,5 +60,5 @@ setup(
         'Topic :: Multimedia :: Video',
         'Topic :: Utilities',
     ],
-    keywords='LiveProxy Streamlink Youtube-DL',
+    keywords='LiveProxy Streamlink Youtube-DL YT-DLP',
 )

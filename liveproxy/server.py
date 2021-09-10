@@ -22,7 +22,7 @@ ACCEPTABLE_ERRNO = (
 )
 
 _re_streamlink = re.compile(r'streamlink$', re.IGNORECASE)
-_re_youtube_dl = re.compile(r'youtube[_-]dl$', re.IGNORECASE)
+_re_youtube_dl = re.compile(r'(?:youtube|yt)[_-]dl(?:p)?$', re.IGNORECASE)
 
 log = logging.getLogger(__name__.replace('liveproxy.', ''))
 
@@ -73,6 +73,7 @@ class HTTPRequest(BaseHTTPRequestHandler):
         elif self.path.startswith(('/base64/')):
             # http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
             # http://127.0.0.1:53422/base64/YOUTUBE-DL-COMMANDS/
+            # http://127.0.0.1:53422/base64/YT-DLP-COMMANDS/
             try:
                 arglist = shlex.split(base64.urlsafe_b64decode(self.path.split('/')[2]).decode('UTF-8'))
             except base64.binascii.Error as err:
@@ -85,7 +86,7 @@ class HTTPRequest(BaseHTTPRequestHandler):
 
         prog = which(arglist[0], mode=os.F_OK | os.X_OK)
         if not prog:
-            log.debug(f'invalid prog: {prog}')
+            log.error(f'invalid prog, can not find "{arglist[0]}" on your system')
             return
 
         log.debug(f'Video-Software: {prog}')

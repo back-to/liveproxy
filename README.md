@@ -89,6 +89,18 @@ Example for `youtube-dl https://www.youtube.com/user/france24/live`
 http://127.0.0.1:53422/base64/eW91dHViZS1kbCBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmU=/
 ```
 
+#### YT-DLP
+
+```text
+http://127.0.0.1:53422/base64/YT-DLP-COMMANDS/
+```
+
+Example for `yt-dlp https://www.youtube.com/user/france24/live`
+
+```text
+http://127.0.0.1:53422/base64/eXQtZGxwIGh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3VzZXIvZnJhbmNlMjQvbGl2ZQ==/
+```
+
 ### LiveProxy-Command
 
 LiveProxy can create this URL automatically.
@@ -103,8 +115,10 @@ streamlink https://www.arte.tv/fr/direct/ 720p,720p_alt,best
 streamlink https://www.youtube.com/user/france24/live best
 #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
 streamlink https://www.euronews.com/live best
-#EXTINF:-1,France24
+#EXTINF:-1,France24 YOUTUBE-DL
 youtube-dl https://www.youtube.com/user/france24/live
+#EXTINF:-1,France24 YT-DLP
+yt-dlp https://www.youtube.com/user/france24/live
 ```
 
 For this example the filename is `example.m3u`
@@ -114,7 +128,7 @@ liveproxy --file example.m3u
 ```
 
 It will create a new file `example.m3u.new` with valid URLs,
-only lines with `streamlink`, `youtube-dl` or `youtube_dl` at the start will be changed.
+only lines with `streamlink`, `youtube-dl`, `youtube_dl`, `yt-dlp` or `yt_dlp` at the start will be changed.
 
 ```text
 #EXTM3U
@@ -124,8 +138,10 @@ http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5hcnRlLnR2L2ZyL2Rpcm
 http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmUgYmVzdA==/
 #EXTINF:-1 tvg-id="EuroNews" tvg-name="EuroNews",Euronews
 http://127.0.0.1:53422/base64/c3RyZWFtbGluayBodHRwczovL3d3dy5ldXJvbmV3cy5jb20vbGl2ZSBiZXN0/
-#EXTINF:-1,France24
+#EXTINF:-1,France24 YOUTUBE-DL
 http://127.0.0.1:53422/base64/eW91dHViZS1kbCBodHRwczovL3d3dy55b3V0dWJlLmNvbS91c2VyL2ZyYW5jZTI0L2xpdmU=/
+#EXTINF:-1,France24 YT-DLP
+http://127.0.0.1:53422/base64/eXQtZGxwIGh0dHBzOi8vd3d3LnlvdXR1YmUuY29tL3VzZXIvZnJhbmNlMjQvbGl2ZQ==/
 ```
 
 You can also use ``--file-output`` for a specified new file,

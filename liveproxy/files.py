@@ -32,7 +32,7 @@ def create_file(args):
     with codecs.open(args.file, 'r', 'utf-8') as temp:
         text = temp.read()
         for line in text.splitlines():
-            if line.startswith(('streamlink', 'youtube-dl', 'youtube_dl')):
+            if line.startswith(('streamlink', 'youtube-dl', 'youtube_dl', 'yt-dlp', 'yt_dlp')):
                 line = URL_TEMPLATE.format(
                     host=HOST,
                     port=PORT,
