@@ -8,7 +8,6 @@ import socket
 import subprocess
 import sys
 from http.server import BaseHTTPRequestHandler, HTTPServer
-from select import select
 from shutil import which
 from socketserver import ThreadingMixIn
 from time import time
@@ -21,8 +20,8 @@ ACCEPTABLE_ERRNO = (
     errno.EPIPE,
 )
 
-_re_streamlink = re.compile(r'streamlink$', re.IGNORECASE)
-_re_youtube_dl = re.compile(r'(?:youtube|yt)[_-]dl(?:p)?$', re.IGNORECASE)
+_re_streamlink = re.compile(r'streamlink', re.IGNORECASE)
+_re_youtube_dl = re.compile(r'(?:youtube|yt)[_-]dl(?:p)?', re.IGNORECASE)
 
 log = logging.getLogger(__name__.replace('liveproxy.', ''))
 
@@ -110,20 +109,11 @@ class HTTPRequest(BaseHTTPRequestHandler):
 
         log.info(f'Stream started {random_id}')
         try:
-            while True:
-                reads, _, _ = select([process.stdout.fileno(), process.stderr.fileno()], [], [])
-                for descriptor in reads:
-                    # stdout
-                    if descriptor == process.stdout.fileno():
-                        read = process.stdout.readline()
-                        if read:
-                            self.wfile.write(read)
-                    # stderr
-                    if descriptor == process.stderr.fileno():
-                        read = process.stderr.readline()
-                        if read:
-                            log.debug(f'{read[0:-1].decode("utf-8")}')
-                    sys.stdout.flush()
+             while True:
+                read = process.stdout.readline()
+                if read:
+                    self.wfile.write(read)
+                sys.stdout.flush()
                 if process.poll() is not None:
                     self.wfile.close()
                     break
