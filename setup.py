@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import codecs
 import os
 import re
@@ -43,22 +43,14 @@ setup(
     author_email='backto@protonmail.ch',
     packages=['liveproxy'],
     entry_points={'console_scripts': ['liveproxy=liveproxy.main:main']},
-    python_requires='>=3.6, <4',
+    python_requires='>=3.7, <4',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
-        'Natural Language :: English',
-        'Operating System :: MacOS',
-        'Operating System :: POSIX',
-        'Operating System :: Unix',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
-        'Programming Language :: Python :: 3.9',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python',
         'Topic :: Internet :: WWW/HTTP',
         'Topic :: Multimedia :: Video',
-        'Topic :: Utilities',
     ],
     keywords='LiveProxy Streamlink Youtube-DL YT-DLP',
 )

@@ -19,6 +19,10 @@ ACCEPTABLE_ERRNO = (
     errno.EINVAL,
     errno.EPIPE,
 )
+try:
+    ACCEPTABLE_ERRNO += (errno.WSAECONNABORTED,)
+except AttributeError:
+    pass  # Not windows
 
 _re_streamlink = re.compile(r'streamlink', re.IGNORECASE)
 _re_youtube_dl = re.compile(r'(?:youtube|yt)[_-]dl(?:p)?', re.IGNORECASE)

@@ -1,14 +1,18 @@
 # Changelog
 
-## unreleased 2.1.0.dev2
+## unreleased 2.1.0.dev3
 
 ### Added
 
 - YT-DLP can now also be used.
 
+### Changed
+
+- only read stdout from stream, ignore stderr
+
 ### Removed
 
-- Windows support
+-  Python 3.6 support
 
 ## 2.0.0
 
