@@ -11,6 +11,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 from shutil import which
 from socketserver import ThreadingMixIn
 from time import time
+from urllib.parse import unquote
 
 ACCEPTABLE_ERRNO = (
     errno.ECONNABORTED,
@@ -68,6 +69,12 @@ class HTTPRequest(BaseHTTPRequestHandler):
                 log.error(f"invalid base64 URL: {err}")
                 self._headers(404, "text/html", connection="close")
                 return
+        elif self.path.startswith(("/cmd/")):
+            # http://127.0.0.1:53422/cmd/streamlink https://example best/
+            self.path = self.path[5:]
+            if self.path.endswith("/"):
+                self.path = self.path[:-1]
+            arglist = shlex.split(unquote(self.path))
         else:
             self._headers(404, "text/html", connection="close")
             return
