@@ -5,6 +5,7 @@
 ### Added
 
 - YT-DLP can now also be used.
+- new URL with `/cmd/commands without encoding`
 
 ### Changed
 
@@ -15,6 +16,7 @@
 - Python 3.6 support
 - URL with `/play/` `/streamlink/` `/301/` `/streamlink_301/`
   such as `http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst`
+- commands to create files for Base64, use direct URLs with /cmd/ instead
 
 ## 2.0.0
 
