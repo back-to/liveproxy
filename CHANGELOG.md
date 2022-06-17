@@ -12,7 +12,9 @@
 
 ### Removed
 
--  Python 3.6 support
+- Python 3.6 support
+- URL with `/play/` `/streamlink/` `/301/` `/streamlink_301/`
+  such as `http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst`
 
 ## 2.0.0
 

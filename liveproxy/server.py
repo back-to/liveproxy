@@ -30,17 +30,6 @@ _re_youtube_dl = re.compile(r'(?:youtube|yt)[_-]dl(?:p)?', re.IGNORECASE)
 log = logging.getLogger(__name__.replace('liveproxy.', ''))
 
 
-def arglist_from_query(path, prog='streamlink'):
-    old_data = parse_qsl(urlparse(path).query)
-    arglist = [prog]
-    for k, v in old_data:
-        if k == 'q':
-            # backwards compatibility --q
-            k = 'default-stream'
-        arglist += ['--{0}'.format(unquote(k)), unquote(v)]
-    return arglist
-
-
 class HTTPRequest(BaseHTTPRequestHandler):
 
     def log_message(self, format, *args):
@@ -70,10 +59,7 @@ class HTTPRequest(BaseHTTPRequestHandler):
         log.info(f'Client: {self.client_address}')
         log.info(f'Address: {self.address_string()}')
 
-        if self.path.startswith(('/play/', '/streamlink/', '/301/', '/streamlink_301/')):
-            # http://127.0.0.1:53422/play/?url=https://foo.bar&q=worst
-            arglist = arglist_from_query(self.path)
-        elif self.path.startswith(('/base64/')):
+        if self.path.startswith(('/base64/')):
             # http://127.0.0.1:53422/base64/STREAMLINK-COMMANDS/
             # http://127.0.0.1:53422/base64/YOUTUBE-DL-COMMANDS/
             # http://127.0.0.1:53422/base64/YT-DLP-COMMANDS/
